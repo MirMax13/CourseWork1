@@ -1,0 +1,71 @@
+/* Стилі для body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Стилі для заголовків h2 */
+  h2 {
+    color: #333;
+  }
+  
+  /* Стилі для форм */
+  form {
+    margin-bottom: 20px;
+  }
+  
+  /* Стилі для кнопок */
+  button {
+    background-color: #0074d9;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  /* Стилі для текстових полів */
+  input[type="text"] {
+    width: 300px;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Стилі для відео та зображень */
+  video, img {
+    max-width: 100%;
+    height: auto;
+    display: none;
+  }
+  
+  /* Стилі для елемента з contentType */
+  #contentType {
+    margin-top: 20px;
+    color: #555;
+  }
+  
+  /* Стилі для елемента з GIF ID */
+  #gifIdElement {
+    margin-top: 10px;
+    color: #888;
+  }
+  
+  /* Стилі для посилання для завантаження GIF як тексту */
+  #downloadTextLink {
+    display: none;
+    color: #0074d9;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  /* Стилі для посилань для завантаження GIF */
+  a {
+    color: #0074d9;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 10px;
+  }

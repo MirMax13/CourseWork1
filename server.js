@@ -38,6 +38,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', async () => {
   console.log('Connected to MongoDB');
 });
+app.use(express.static(path.join(__dirname, 'public')));
 
 // GET-запит для відображення форми завантаження файлів
 app.get('/', (req, res) => {
@@ -165,7 +166,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   }
 });
 
-app.post('/convert-text-to-gif', async (req, res) => {
+/*app.post('/convert-text-to-gif', async (req, res) => {
   try {
     const { text } = req.body; // Отримайте текст з тіла запиту
 
@@ -187,7 +188,7 @@ app.post('/convert-text-to-gif', async (req, res) => {
     console.error('Error converting text to GIF:', error);
     res.status(500).send('Помилка конвертації тексту в GIF.');
   }
-});
+});*/
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

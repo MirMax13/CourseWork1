@@ -12,8 +12,7 @@
   <h2>View GIF</h2>
   <!-- Додайте текстове поле для введення ідентифікатора GIF -->
   <input type="text" id="gifIdInput" placeholder="GIF ID">
-  <button onclick="openGif('video')">Open as Video</button>
-  <button onclick="openGif('img')">Open as Image</button>
+  <button onclick="openGif('img')">Open Gif</button>
   <!-- Використовуйте <video> для відображення GIF -->
   <video id="gifVideo" controls class="styled-video" style="display: none;"></video> <!-- Додав клас "styled-video" -->
   <!-- Використовуйте <img> для відображення GIF -->
@@ -24,18 +23,19 @@
 <input type="text" id="downloadTextGifId" placeholder="Enter GIF ID">
 <button onclick="downloadTextGif()">Download GIF as Text</button>
 <a id="downloadTextLink" style="display: none;">Download GIF as Text</a>
-<h2>Convert Text File to GIF</h2>
+<!--<h2>Convert Text File to GIF</h2>
 <input type="file" id="fileInput" accept=".txt">
-<button onclick="convertFileToGif()">Convert Text File to GIF</button>
+<button onclick="convertFileToGif()">Convert Text File to GIF</button>-->
 <h2>Download GIF</h2>
 <input type="text" id="downloadGifId" placeholder="Enter GIF ID">
 <button onclick="downloadGif()">Download GIF</button>
 
   <script>
     function openGif(displayType) {
+      console.log('Button clicked'); // Додайте цей рядок
       const gifIdInput = document.getElementById('gifIdInput');
       const gifId = gifIdInput.value; // Отримайте ідентифікатор GIF з текстового поля
-      //const gifId = "65315dcfa1191c6bee57d288"; // Замініть на потрібний ідентифікатор GIF
+      //const gifId = "653aa209768b4308efac2114"; // Замініть на потрібний ідентифікатор GIF
       const gifVideo = document.getElementById('gifVideo');
       const gifImage = document.getElementById('gifImage');
       //const downloadLink = document.getElementById('downloadLink'); // Додана ця лінія
@@ -62,17 +62,17 @@
         .then(blob => {
           if (blob) {
             const gifUrl = URL.createObjectURL(blob);
-            if (displayType === 'video') {
-              gifVideo.src = gifUrl;
-              gifVideo.style.display = 'block';
-            } else if (displayType === 'img') {
+           
               gifImage.src = gifUrl;
-              //gifImage.style.display = 'block';
-            }
+              gifImage.style.display = 'block';
+        gifVideo.style.display = 'none'; // Приховати відео, якщо вибрано зображення
+            
             // Відобразіть посилання для завантаження GIF, якщо GIF існує
         //downloadLink.href = gifUrl;
         //downloadLink.download = `${gifId}.gif`;
         //downloadLink.style.display = 'block'; // Додана ця лінія
+        // Отримано GIF як відповідь, обробка його тут
+            console.log(blob);
           }
         })
         .catch(error => {
@@ -122,7 +122,7 @@
       console.error('Error fetching GIF:', error);
     });
 }
-function convertFileToGif() {
+/*function convertFileToGif() {
   const fileInput = document.getElementById('fileInput');
   const file = fileInput.files[0];
 
@@ -205,7 +205,7 @@ const textData = "Ваш текст для конвертації в GIF"; // З
     })
     .catch(error => {
       console.error('Помилка POST-запиту:', error);
-    });
+    });*/
   </script>
   
 </body>
