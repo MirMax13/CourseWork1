@@ -12,9 +12,9 @@
   <h2>View GIF</h2>
   <!-- Додайте текстове поле для введення ідентифікатора GIF -->
   <input type="text" id="gifIdInput" placeholder="GIF ID">
-  <button onclick="openGif('img')">Open Gif</button>
+  <button onclick="openGif()">Open Gif</button>
   <!-- Використовуйте <video> для відображення GIF -->
-  <video id="gifVideo" controls class="styled-video" style="display: none;"></video> <!-- Додав клас "styled-video" -->
+  <video id="" controls class="styled-video" style="display: none;"></video> <!-- Додав клас "styled-video" -->
   <!-- Використовуйте <img> для відображення GIF -->
   <img id="gifImage" style="display: none;">
   <div id="contentType"></div>
@@ -31,18 +31,18 @@
 <button onclick="downloadGif()">Download GIF</button>
 
   <script>
-    function openGif(displayType) {
+    function openGif() {
       console.log('Button clicked'); // Додайте цей рядок
       const gifIdInput = document.getElementById('gifIdInput');
       const gifId = gifIdInput.value; // Отримайте ідентифікатор GIF з текстового поля
       //const gifId = "653aa209768b4308efac2114"; // Замініть на потрібний ідентифікатор GIF
-      const gifVideo = document.getElementById('gifVideo');
+      //const gifVideo = document.getElementById('gifVideo');
       const gifImage = document.getElementById('gifImage');
       //const downloadLink = document.getElementById('downloadLink'); // Додана ця лінія
 
       // Видаліть раніше відображений GIF, якщо такий є
-      gifVideo.style.display = 'none';
-      gifVideo.src = '';
+      //gifVideo.style.display = 'none';
+      //gifVideo.src = '';
       //gifImage.style.display = 'none';
       //gifImage.src = '';
 
@@ -65,7 +65,7 @@
            
               gifImage.src = gifUrl;
               gifImage.style.display = 'block';
-        gifVideo.style.display = 'none'; // Приховати відео, якщо вибрано зображення
+        //gifVideo.style.display = 'none'; // Приховати відео, якщо вибрано зображення
             
             // Відобразіть посилання для завантаження GIF, якщо GIF існує
         //downloadLink.href = gifUrl;
