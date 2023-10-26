@@ -146,7 +146,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
 
       // Зчитати файл як бінарні дані
-      const fileData = fs.readFileSync(req.file.path, 'binary');
+      const fileData = fs.readFileSync(req.file.path);
       
       const gif = new GifModel({
         filename: originalname,
