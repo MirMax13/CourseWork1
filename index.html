@@ -10,45 +10,30 @@
     <input type="submit" value="Upload File">
   </form>
   <h2>View GIF</h2>
-  <!-- Додайте текстове поле для введення ідентифікатора GIF -->
-  <input type="text" id="gifIdInput" placeholder="GIF ID">
-  <!--<button onclick="openGif('video')">Open as Video</button>-->
+  <input type="text" id="gifIdInput" placeholder="GIF ID"> <!-- Текстове поле для введення ідентифікатора GIF -->
   <button onclick="openGif()">Open Gif</button>
-  <!-- Використовуйте <video> для відображення GIF -->
-  <video id="" controls class="styled-video" style="display: none;"></video> <!-- Додав клас "styled-video" -->
-  <!-- Використовуйте <img> для відображення GIF -->
-  <img id="gifImage" style="display: none;">
+  <video id="" controls class="styled-video" style="display: none;"></video> <!-- <video> для відображення GIF з класом "styled-video" -->
+  <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
   <div id="contentType"></div>
   <div id="gifIdElement"></div>
+
   <h2>Download GIF as Text</h2>
 <input type="text" id="downloadTextGifId" placeholder="Enter GIF ID">
 <button onclick="downloadTextGif()">Download GIF as Text</button>
 <a id="downloadTextLink" style="display: none;">Download GIF as Text</a>
-<!--<h2>Convert Text File to GIF</h2>
-<input type="file" id="fileInput" accept=".txt">
-<button onclick="convertFileToGif()">Convert Text File to GIF</button>-->
+
 <h2>Download GIF</h2>
 <input type="text" id="downloadGifId" placeholder="Enter GIF ID">
 <button onclick="downloadGif()">Download GIF</button>
 
   <script>
     function openGif() {
-      console.log('Button clicked'); // Додайте цей рядок
+      console.log('Button clicked'); // Перевірка чи кнопка натиснута
       const gifIdInput = document.getElementById('gifIdInput');
-      const gifId = gifIdInput.value; // Отримайте ідентифікатор GIF з текстового поля
-      //const gifId = "65315dcfa1191c6bee57d288"; // Замініть на потрібний ідентифікатор GIF
-      //const gifVideo = document.getElementById('gifVideo');
+      const gifId = gifIdInput.value; // Отримання ідентифікатор GIF з текстового поля
       const gifImage = document.getElementById('gifImage');
-      //const downloadLink = document.getElementById('downloadLink'); // Додана ця лінія
-
-      // Видаліть раніше відображений GIF, якщо такий є
-      //gifVideo.style.display = 'none';
-      //gifVideo.src = '';
-      //gifImage.style.display = 'none';
-      //gifImage.src = '';
-
-      // Очистіть contentType
-      document.getElementById('contentType').textContent = '';
+      
+      document.getElementById('contentType').textContent = ''; // Очистка contentType
       
       fetch(`/get-gif/${gifId}`)
         .then(response => {
@@ -65,12 +50,6 @@
             const gifUrl = URL.createObjectURL(blob);
             gifImage.src = gifUrl;
             gifImage.style.display = 'block';
-        //gifVideo.style.display = 'none'; // Приховати відео, якщо вибрано зображення
-            // Відобразіть посилання для завантаження GIF, якщо GIF існує
-        //downloadLink.href = gifUrl;
-        //downloadLink.download = `${gifId}.gif`;
-        //downloadLink.style.display = 'block'; // Додана ця лінія
-        // Отримано GIF як відповідь, обробка його тут
         console.log(blob);
           }
         })
@@ -78,8 +57,7 @@
           console.error('Error fetching GIF:', error);
         });
 
-      // Відображення contentType
-      fetch(`/get-content-type/${gifId}`)
+      fetch(`/get-content-type/${gifId}`) // Відображення contentType
         .then(response => response.text())
         .then(contentType => {
           document.getElementById('contentType').textContent = contentType;
@@ -121,43 +99,6 @@
       console.error('Error fetching GIF:', error);
     });
 }
-/*function convertFileToGif() {
-  const fileInput = document.getElementById('fileInput');
-  const file = fileInput.files[0];
-
-  if (!file) {
-    console.error('Please select a text file.');
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    const text = event.target.result;
-
-    fetch('/convert-text-to-gif', {
-      method: 'POST',
-      body: JSON.stringify({ text }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then(response => {
-        if (!response.ok) {
-          console.error('Error converting text file to GIF:', response.status);
-        } else {
-          return response.text();
-        }
-      })
-      .then(data => {
-        if (data) {
-          alert(data); // Виведіть повідомлення про успішну конвертацію
-        }
-      })
-      .catch(error => {
-        console.error('Error converting text file to GIF:', error);
-      });
-  };
-
-  reader.readAsText(file);
-}*/
 
 function downloadGif() {
   const gifIdInput = document.getElementById('downloadGifId');
@@ -189,22 +130,6 @@ function downloadGif() {
       console.error('Error fetching GIF:', error);
     });
 }
-
-/*const textData = "Ваш текст для конвертації в GIF"; // Замініть це на ваші дані
-    fetch('/convert-text-to-gif', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text: textData }),
-    })
-    .then(response => response.blob())
-    .then(blob => {
-      // Отримано GIF як відповідь, обробка його тут
-    })
-    .catch(error => {
-      console.error('Помилка POST-запиту:', error);
-    });*/
   </script>
   
 </body>
