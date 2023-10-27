@@ -38,8 +38,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', async () => {
   console.log('Connected to MongoDB');
 });
-app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(express.static(path.join(__dirname, 'public')));
 // GET-запит для відображення форми завантаження файлів
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
