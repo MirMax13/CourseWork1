@@ -160,6 +160,24 @@ app.get('/get-Comaru-gif-list', async (req, res) => {
   }
 });
 
+app.get('/get-Pig-gif-list', async (req, res) => {
+  try {
+    const PigGifs = await GifModel.find({ attributes: 'pig' }, 'filename');
+    res.json(PigGifs);
+  } catch (error) {
+    res.status(500).send('Помилка отримання списку "Pig" GIFs');
+  }
+});
+
+app.get('/get-Others-gif-list', async (req, res) => {
+  try {
+    const OthersGifs = await GifModel.find({ attributes: 'others' }, 'filename');
+    res.json(OthersGifs);
+  } catch (error) {
+    res.status(500).send('Помилка отримання списку "others" GIFs');
+  }
+});
+
 app.post('/upload', upload.single('file'), async (req, res) => { // POST-запит для завантаження файлів
   try {
     if (req.file) {
