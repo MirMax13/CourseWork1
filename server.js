@@ -22,7 +22,7 @@ const gifSchema = new mongoose.Schema({
   filename: String,
   data: Buffer,
   contentType: String,
-  
+  attributes: [String], // Додайте атрибути гіфки у вигляді масиву рядків
 });
 
 const GifModel = mongoose.model('Gif', gifSchema);
@@ -141,6 +141,9 @@ app.get('/save-gif/:id', async (req, res) => {
 // Додати новий GET-маршрут для отримання списку гіфок
 app.get('/get-gif-list', async (req, res) => {
   try {
+    /*const { attributes } = req.query;
+    const query = attributes ? { attributes: { $in: attributes.split(',') } } : {};*/
+
     const gifs = await GifModel.find({}, 'filename');
     res.json(gifs);
   } catch (error) {
@@ -148,6 +151,14 @@ app.get('/get-gif-list', async (req, res) => {
   }
 });
 
+app.get('/get-Comaru-gif-list', async (req, res) => {
+  try {
+    const ComaruGifs = await GifModel.find({ attributes: 'Comaru' }, 'filename');
+    res.json(ComaruGifs);
+  } catch (error) {
+    res.status(500).send('Помилка отримання списку "Comaru" GIFs');
+  }
+});
 
 app.post('/upload', upload.single('file'), async (req, res) => { // POST-запит для завантаження файлів
   try {
@@ -160,6 +171,7 @@ app.post('/upload', upload.single('file'), async (req, res) => { // POST-зап�
         filename: originalname,
         data: fileData,
         contentType: mimetype,
+        attributes: ['all'], // Додайте атрибути до гіфки
       });
 
       await gif.save();

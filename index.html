@@ -33,7 +33,8 @@
 <h2>Download GIF</h2>
 <input type="text" id="downloadGifId" placeholder="Enter GIF ID">
 <button onclick="downloadGif()">Download GIF</button>
-
+<h2>View Funny GIFs</h2>
+<button onclick="displayFunnyGifList()">Show Funny GIFs</button>
 <!-- Додано новий блок для відображення списку гіфок -->
 <div class="gif-container">
   <!-- Список GIF і CSS вже включені -->
@@ -184,7 +185,28 @@ function displayGifList() {
     }
 
     displayGifList(); // Виклик функції при завантаженні сторінки для відображення списку гіфок
+    function displayFunnyGifList() {
+  const gifList = document.getElementById('gifList');
+  gifList.innerHTML = ''; // Очистити список
 
+  // Запит до сервера для отримання списку "Comaru" гіфок
+  fetch('/get-Comaru-gif-list')
+    .then(response => response.json())
+    .then(data => {
+      if (data.length > 0) {
+        data.forEach(gif => {
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+          gifList.appendChild(listItem);
+        });
+      } else {
+        gifList.innerHTML = '<li>No "Comaru" GIFs available.</li>';
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching "Comaru" GIF list:', error);
+    });
+}
   </script>
   
 </body>
