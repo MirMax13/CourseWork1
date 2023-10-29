@@ -22,6 +22,7 @@ const gifSchema = new mongoose.Schema({
   filename: String,
   data: Buffer,
   contentType: String,
+  
 });
 
 const GifModel = mongoose.model('Gif', gifSchema);
@@ -41,7 +42,7 @@ db.once('open', async () => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => { // GET-запит для відображення форми завантаження файлів
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html')); //тут доопрацювати
 });
 
 
@@ -61,7 +62,7 @@ try {
   res.status(500).send('Помилка відкриття GIF з бази даних');
 }
 });
-app.get('/get-gif-text/:id', async (req, res) => {
+/*app.get('/get-gif-text/:id', async (req, res) => {
   try {
     const gifId = req.params.id;
     const gif = await GifModel.findById(gifId);
@@ -82,7 +83,7 @@ app.get('/get-gif-text/:id', async (req, res) => {
   } catch (error) {
     res.status(500).send('Помилка відкриття GIF з бази даних');
   }
-});
+});*/
 
 
 app.get('/get-content-type/:id', async (req, res) => {
@@ -137,6 +138,15 @@ app.get('/save-gif/:id', async (req, res) => {
   }
 });
 
+// Додати новий GET-маршрут для отримання списку гіфок
+app.get('/get-gif-list', async (req, res) => {
+  try {
+    const gifs = await GifModel.find({}, 'filename');
+    res.json(gifs);
+  } catch (error) {
+    res.status(500).send('Помилка отримання списку GIFs');
+  }
+});
 
 
 app.post('/upload', upload.single('file'), async (req, res) => { // POST-запит для завантаження файлів

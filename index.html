@@ -4,11 +4,18 @@
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
+  <div id="tabs">
+    <button class="tab-button" onclick="showTab('main')">Main</button>
+    <button class="tab-button" onclick="showTab('comaruFamily')">Comaru Family</button>
+    <button class="tab-button" onclick="showTab('pig')">Pig</button>
+    <button class="tab-button" onclick="showTab('others')">Others</button>
+  </div>
   <h2>File Upload</h2>
   <form action="/upload" method="post" enctype="multipart/form-data">
     <input type="file" name="file">
     <input type="submit" value="Upload File">
   </form>
+
   <h2>View GIF</h2>
   <input type="text" id="gifIdInput" placeholder="GIF ID"> <!-- Текстове поле для введення ідентифікатора GIF -->
   <button onclick="openGif()">Open Gif</button>
@@ -16,6 +23,7 @@
   <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
   <div id="contentType"></div>
   <div id="gifIdElement"></div>
+
 
   <h2>Download GIF as Text</h2>
 <input type="text" id="downloadTextGifId" placeholder="Enter GIF ID">
@@ -25,6 +33,16 @@
 <h2>Download GIF</h2>
 <input type="text" id="downloadGifId" placeholder="Enter GIF ID">
 <button onclick="downloadGif()">Download GIF</button>
+
+<!-- Додано новий блок для відображення списку гіфок -->
+<div class="gif-container">
+  <!-- Список GIF і CSS вже включені -->
+  <h2>List of GIFs</h2>
+  <div class="gif-columns">
+    <ul id="gifList"></ul>
+  </div>
+</div>
+<!-- Кінець нового блоку -->
 
   <script>
     function openGif() {
@@ -130,6 +148,43 @@ function downloadGif() {
       console.error('Error fetching GIF:', error);
     });
 }
+
+function displayGifList() {
+      const gifList = document.getElementById('gifList');
+      gifList.innerHTML = ''; // Очистити список
+
+      // Запит до сервера для отримання списку гіфок
+      fetch('/get-gif-list')
+        .then(response => response.json())
+        .then(data => {
+          if (data.length > 0) {
+            data.forEach(gif => {
+              const listItem = document.createElement('li');
+              listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+              gifList.appendChild(listItem);
+            });
+          } else {
+            gifList.innerHTML = '<li>No GIFs available.</li>';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching GIF list:', error);
+        });
+    }
+
+    function showGif(gifId) {
+      const gifIdInput = document.getElementById('gifIdInput');
+      const downloadGifIdInput = document.getElementById('downloadGifId'); // Додайте цей рядок
+      const downloadTextGifId = document.getElementById('downloadTextGifId');
+
+      gifIdInput.value = gifId;
+      downloadGifIdInput.value = gifId; // Заповнюємо поле для Download ID
+      downloadTextGifId.value=gifId;
+      openGif();
+    }
+
+    displayGifList(); // Виклик функції при завантаженні сторінки для відображення списку гіфок
+
   </script>
   
 </body>

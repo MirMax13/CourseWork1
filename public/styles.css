@@ -69,3 +69,23 @@ body {
     font-weight: bold;
     margin-top: 10px;
   }
+  .gif-container {
+    margin: 20px; /* Задайте бажаний відступ в пікселях */
+  }
+  
+  .gif-columns {
+    column-count: 3; /* Задайте бажану кількість стовпців */
+    column-gap: 20px; /* Зазор між стовпцями */
+  }
+
+  .gif-columns ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .gif-columns li {
+    margin-bottom: 10px; /* Зазор між елементами у стовпці */
+  }
+
+  
