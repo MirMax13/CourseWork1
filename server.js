@@ -101,6 +101,21 @@ app.get('/get-content-type/:id', async (req, res) => {
   }
 });
 
+app.get('/get-gif-attributes/:id', async (req, res) => {
+  try {
+    const gifId = req.params.id;
+
+    const gif = await GifModel.findById(gifId);
+    if (!gif) {
+      return res.status(404).send('GIF not found');
+    }
+
+    res.json(gif.attributes);
+  } catch (error) {
+    res.status(500).send('Помилка отримання атрибутів GIF з бази даних');
+  }
+});
+
 app.get('/download-gif/:id', async (req, res) => {
   try {
     const gifId = req.params.id;
