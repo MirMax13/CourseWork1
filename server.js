@@ -184,6 +184,15 @@ app.get('/get-Pig-gif-list', async (req, res) => {
   }
 });
 
+app.get('/get-Arctic_Vixen-gif-list', async (req, res) => {
+  try {
+    const Arctic_VixenGifs = await GifModel.find({ attributes: 'arctic_vixen' }, 'filename');
+    res.json(Arctic_VixenGifs);
+  } catch (error) {
+    res.status(500).send('Помилка отримання списку "arctic_vixen" GIFs');
+  }
+});
+
 app.get('/get-Others-gif-list', async (req, res) => {
   try {
     const OthersGifs = await GifModel.find({ attributes: 'others' }, 'filename');
@@ -204,7 +213,7 @@ app.post('/upload', upload.single('file'), async (req, res) => { // POST-зап�
         filename: originalname,
         data: fileData,
         contentType: mimetype,
-        attributes: ['all'], // Додайте атрибути до гіфки
+        attributes: ['all', 'fox','arctic_vixen','not_my'], // Додайте атрибути до гіфки
       });
 
       await gif.save();
