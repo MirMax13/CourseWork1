@@ -22,7 +22,7 @@ const gifSchema = new mongoose.Schema({
   filename: String,
   data: Buffer,
   contentType: String,
-  attributes: [String], // Додайте атрибути гіфки у вигляді масиву рядків
+  attributes: [String],
 });
 
 const GifModel = mongoose.model('Gif', gifSchema);
@@ -42,7 +42,7 @@ db.once('open', async () => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => { // GET-запит для відображення форми завантаження файлів
-  res.sendFile(path.join(__dirname, 'index.html')); //тут доопрацювати
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 
@@ -134,7 +134,7 @@ app.get('/download-gif/:id', async (req, res) => {
   }
 });
 
-app.get('/save-gif/:id', async (req, res) => {
+/*app.get('/save-gif/:id', async (req, res) => {
   try {
     const gifId = req.params.id;
     const gif = await GifModel.findById(gifId);
@@ -144,21 +144,18 @@ app.get('/save-gif/:id', async (req, res) => {
     }
 
 
-    const filePath = `uploads/${gifId}.gif`;     // Створення файлу та записування в нього бінарних даних
+    const filePath = `uploads/${gifId}.gif`;     // Створення файлу та запис у нього бінарних даних
     fs.writeFileSync(filePath, gif.data);
 
-    res.download(filePath); // Відправте файл користувачеві для завантаження
+    res.download(filePath); // Відправка файлу користувачеві для завантаження
   } catch (error) {
     res.status(500).send('Помилка збереження файлу');
   }
-});
+});*/
 
-// Додати новий GET-маршрут для отримання списку гіфок
+// GET-маршрут для отримання списку гіфок
 app.get('/get-gif-list', async (req, res) => {
   try {
-    /*const { attributes } = req.query;
-    const query = attributes ? { attributes: { $in: attributes.split(',') } } : {};*/
-
     const gifs = await GifModel.find({}, 'filename');
     res.json(gifs);
   } catch (error) {
@@ -207,13 +204,13 @@ app.post('/upload', upload.single('file'), async (req, res) => { // POST-зап�
     if (req.file) {
       const { originalname, buffer, mimetype } = req.file;
 
-      const fileData = fs.readFileSync(req.file.path); // Зчитати файл як бінарні дані
+      const fileData = fs.readFileSync(req.file.path); // Зчитування файлів як бінарні дані
       
       const gif = new GifModel({
         filename: originalname,
         data: fileData,
         contentType: mimetype,
-        attributes: ['all', 'fox','arctic_vixen','not_my'], // Додайте атрибути до гіфки
+        attributes: ['all'], 
       });
 
       await gif.save();
