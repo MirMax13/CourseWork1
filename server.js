@@ -46,7 +46,7 @@ app.get('/', (req, res) => { // GET-запит для відображення �
 });
 
 
-app.get('/get-gif/:id', async (req, res) => { // GET-запит для відображення GIF
+app.get('/gif/:id', async (req, res) => { // GET-запит для відображення GIF
 try {
   const gifId = req.params.id;
   const gif = await GifModel.findById(gifId);
@@ -62,46 +62,8 @@ try {
   res.status(500).send('Помилка відкриття GIF з бази даних');
 }
 });
-/*app.get('/get-gif-text/:id', async (req, res) => {
-  try {
-    const gifId = req.params.id;
-    const gif = await GifModel.findById(gifId);
 
-    if (!gif) {
-      return res.status(404).send('GIF not found');
-    }
-
-
-    res.setHeader('Content-Type', 'text/plain');     // Встановлення правильного Content-Type для текстового файлу
-    res.setHeader('Content-Disposition', 'attachment; filename=gif.txt');
-    
-  
-    const base64Data = gif.data.toString('base64');   // Конвертування бінарних даних GIF у формат Base64
-    
-
-    res.send(base64Data);     // Відправка даних у формі текстового файлу
-  } catch (error) {
-    res.status(500).send('Помилка відкриття GIF з бази даних');
-  }
-});*/
-
-
-app.get('/get-content-type/:id', async (req, res) => {
-  try {
-    const gifId = req.params.id;
-
-    const gif = await GifModel.findById(gifId);
-    if (!gif) {
-      return res.status(404).send('GIF not found');
-    }
-
-    res.send(gif.contentType);
-  } catch (error) {
-    res.status(500).send('Помилка отримання contentType з бази даних');
-  }
-});
-
-app.get('/get-gif-attributes/:id', async (req, res) => {
+app.get('/gif-attributes/:id', async (req, res) => {
   try {
     const gifId = req.params.id;
 
@@ -134,27 +96,9 @@ app.get('/download-gif/:id', async (req, res) => {
   }
 });
 
-/*app.get('/save-gif/:id', async (req, res) => {
-  try {
-    const gifId = req.params.id;
-    const gif = await GifModel.findById(gifId);
-
-    if (!gif) {
-      return res.status(404).send('GIF not found');
-    }
-
-
-    const filePath = `uploads/${gifId}.gif`;     // Створення файлу та запис у нього бінарних даних
-    fs.writeFileSync(filePath, gif.data);
-
-    res.download(filePath); // Відправка файлу користувачеві для завантаження
-  } catch (error) {
-    res.status(500).send('Помилка збереження файлу');
-  }
-});*/
 
 // GET-маршрут для отримання списку гіфок
-app.get('/get-gif-list', async (req, res) => {
+app.get('/gif-list', async (req, res) => {
   try {
     const gifs = await GifModel.find({}, 'filename');
     res.json(gifs);
@@ -163,7 +107,7 @@ app.get('/get-gif-list', async (req, res) => {
   }
 });
 
-app.get('/get-Comaru-gif-list', async (req, res) => {
+app.get('/Comaru-gif-list', async (req, res) => {
   try {
     const ComaruGifs = await GifModel.find({ attributes: 'Comaru' }, 'filename');
     res.json(ComaruGifs);
@@ -172,7 +116,7 @@ app.get('/get-Comaru-gif-list', async (req, res) => {
   }
 });
 
-app.get('/get-Pig-gif-list', async (req, res) => {
+app.get('/Pig-gif-list', async (req, res) => {
   try {
     const PigGifs = await GifModel.find({ attributes: 'pig' }, 'filename');
     res.json(PigGifs);
@@ -181,7 +125,7 @@ app.get('/get-Pig-gif-list', async (req, res) => {
   }
 });
 
-app.get('/get-Arctic_Vixen-gif-list', async (req, res) => {
+app.get('/Arctic_Vixen-gif-list', async (req, res) => {
   try {
     const Arctic_VixenGifs = await GifModel.find({ attributes: 'arctic_vixen' }, 'filename');
     res.json(Arctic_VixenGifs);
@@ -190,7 +134,7 @@ app.get('/get-Arctic_Vixen-gif-list', async (req, res) => {
   }
 });
 
-app.get('/get-Others-gif-list', async (req, res) => {
+app.get('/Others-gif-list', async (req, res) => {
   try {
     const OthersGifs = await GifModel.find({ attributes: 'others' }, 'filename');
     res.json(OthersGifs);
