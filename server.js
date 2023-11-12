@@ -79,17 +79,18 @@ app.get('/gif-attributes/:id', async (req, res) => {
 });
 
 app.get('/download-gif/:id', async (req, res) => {
-  try {
+    try {
     const gifId = req.params.id;
+    const downloadFileName = req.query.fileName || 'downloaded.gif';
+
     const gif = await GifModel.findById(gifId);
 
     if (!gif) {
       return res.status(404).send('GIF not found');
     }
 
- 
-    res.setHeader('Content-Type', gif.contentType);    // Встановлення правильного Content-Type для GIF
-    res.setHeader('Content-Disposition', 'attachment; filename=downloaded.gif');
+    res.setHeader('Content-Type', gif.contentType);
+    res.setHeader('Content-Disposition', `attachment; filename=${downloadFileName}`);
     res.send(gif.data);
   } catch (error) {
     res.status(500).send('Помилка відкриття GIF з бази даних');
@@ -143,6 +144,38 @@ app.get('/Others-gif-list', async (req, res) => {
   }
 });
 
+app.get('/search-by-name/:name', async (req, res) => {
+  try {
+    const searchTerm = req.params.name;
+
+    const gifs = await GifModel.find({ filename: { $regex: searchTerm, $options: 'i' } }, 'filename');
+    res.json(gifs);
+  } catch (error) {
+    res.status(500).send('Помилка пошуку GIFs за назвою');
+  }
+});
+app.get('/search-by-attribute/:attribute', async (req, res) => {
+  const attribute = req.params.attribute;
+
+  try {
+    // Assuming you have a MongoDB or another database where GIF data is stored
+    // Replace this with your database query to find GIFs by attribute
+    const gifs = await GifModel.find({ attributes: attribute }).exec();
+
+    // Truncate or omit parts of the data to avoid RangeError
+    const truncatedGifs = gifs.map(gif => ({
+      _id: gif._id,
+      filename: gif.filename,
+      // Add other properties as needed
+    }));
+
+    res.json(truncatedGifs);
+  } catch (error) {
+    console.error('Error searching by attribute:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.post('/upload', upload.single('file'), async (req, res) => { // POST-запит для завантаження файлів
   try {
     if (req.file) {
@@ -167,6 +200,8 @@ app.post('/upload', upload.single('file'), async (req, res) => { // POST-зап�
     res.status(500).send('Помилка збереження файлу в базу даних.');
   }
 });
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

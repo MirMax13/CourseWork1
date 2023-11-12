@@ -1,95 +1,110 @@
-/* Стилі для body */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* Стилі для заголовків h2 */
-  h2 {
-    color: #333;
-  }
-  
-  /* Стилі для форм */
-  form {
-    margin-bottom: 20px;
-  }
-  
-  /* Стилі для кнопок */
-  button {
-    background-color: #0074d9;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  /* Стилі для текстових полів */
-  input[type="text"] {
-    width: 300px;
-    padding: 10px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  /* Стилі для відео та зображень */
-  video, img {
-    max-width: 100%;
-    height: auto;
-    display: none;
-  }
-  
-  /* Стилі для елемента з contentType */
-  #contentType {
-    margin-top: 20px;
-    color: #555;
-  }
-  
-  /* Стилі для елемента з GIF ID */
-  #gifIdElement {
-    margin-top: 10px;
-    color: #888;
-  }
-  
-  /* Стилі для посилання для завантаження GIF як тексту */
-  #downloadTextLink {
-    display: none;
-    color: #0074d9;
-    text-decoration: none;
-    font-weight: bold;
-    margin-top: 10px;
-  }
-  
-  /* Стилі для посилань для завантаження GIF */
-  a {
-    color: #0074d9;
-    text-decoration: none;
-    font-weight: bold;
-    margin-top: 10px;
-  }
-  .gif-container {
-    margin: 20px; /* Задайте бажаний відступ в пікселях */
-  }
-  
-  .gif-columns {
-    column-count: 3; /* Задайте бажану кількість стовпців */
-    column-gap: 20px; /* Зазор між стовпцями */
-  }
+  /* Стилі для body */
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Стилі для заголовків h2 */
+    h2 {
+      color: #333;
+    }
+    
+    /* Стилі для форм */
+    form {
+      margin-bottom: 20px;
+    }
+    
+    /* Стилі для кнопок */
+    button {
+      background-color: #0074d9;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    
+    /* Стилі для текстових полів */
+    input[type="text"] {
+      width: 300px;
+      padding: 10px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    
+    /* Стилі для відео та зображень */
+    video, img {
+      max-width: 100%;
+      height: auto;
+      display: none;
+    }
+    
+    /* Стилі для елемента з contentType */
+    #contentType {
+      margin-top: 20px;
+      color: #555;
+    }
+    
+    /* Стилі для елемента з GIF ID */
+    #gifIdElement {
+      margin-top: 10px;
+      color: #888;
+    }
+    
+    /* Стилі для посилання для завантаження GIF як тексту */
+    #downloadTextLink {
+      display: none;
+      color: #0074d9;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    
+    /* Стилі для посилань для завантаження GIF */
+    a {
+      color: #0074d9;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .gif-container {
+      margin: 20px; /* Задайте бажаний відступ в пікселях */
+    }
+    
+    .gif-columns {
+      column-count: 3; /* Задайте бажану кількість стовпців */
+      column-gap: 20px; /* Зазор між стовпцями */
+    }
 
-  .gif-columns ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
+    .gif-columns ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
 
-  .gif-columns li {
-    margin-bottom: 10px; /* Зазор між елементами у стовпці */
-  }
-  .active-tab {
-    background-color: #007BFF; /* Змініть колір фону активної вкладки на ваш смак */
-    color: #fff; /* Змініть колір тексту активної вкладки на ваш смак */
-    transition: background-color 0.3s, color 0.3s; /* Анімація зміни кольору фону та тексту з тривалістю 0.3 секунди */
-  }
-  
+    .gif-columns li {
+      margin-bottom: 10px; /* Зазор між елементами у стовпці */
+    }
+    .active-tab {
+      background-color: #007BFF; /* Змініть колір фону активної вкладки на ваш смак */
+      color: #fff; /* Змініть колір тексту активної вкладки на ваш смак */
+      transition: background-color 0.3s, color 0.3s; /* Анімація зміни кольору фону та тексту з тривалістю 0.3 секунди */
+    }
+    #tabs {
+      display: flex;
+      justify-content: space-between; /* Змінено з space-between на flex-end */
+    }
+    
+    .tab-button {
+      margin-left: 10px; /* Додайте бажаний відступ між вкладками */
+    }
+    
+    .tab-button[data-tab="searchByName"] {
+      margin-left: auto; /* Змінено з auto на 0 */
+    }
+    
+    .tab-button[data-tab="searchByAttributes"] {
+      margin-left: 10px; /* Змінено з auto на 10px */
+    }

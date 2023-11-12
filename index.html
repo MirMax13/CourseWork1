@@ -10,6 +10,9 @@
   <button class="tab-button" data-tab="pig" onclick="showTab('pig')">Pig</button>
   <button class="tab-button" data-tab="arctic_vixen" onclick="showTab('arctic_vixen')">Arctic Vixen</button>
   <button class="tab-button" data-tab="others" onclick="showTab('others')">Others</button>
+
+<button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
+<button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
   </div>
   <h2>File Upload</h2>
   <form action="/upload" method="post" enctype="multipart/form-data">
@@ -19,11 +22,27 @@
 
   <h2>View and Download GIF</h2>
   <input type="text" id="gifIdInput" placeholder="GIF ID"> <!-- Текстове поле для введення ідентифікатора GIF -->
+  <input type="text" id="downloadFileNameInput" placeholder="Enter file name (in Latin)">
   <button onclick="openGif()">Open GIF</button>
   <button onclick="downloadGif()">Download GIF</button>
   <video id="" controls class="styled-video" style="display: none;"></video> <!-- <video> для відображення GIF з класом "styled-video" -->
   <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
   <div id="gifAttributes"></div>
+
+  <div class="tab-divider"></div>
+
+<!-- Додайте поле введення та кнопку для пошуку за назвою GIF -->
+<div id="searchByNameTabContent" style="display: none;">
+  <input type="text" id="searchByNameInput" placeholder="Enter GIF name">
+  <button onclick="searchByName()">Search</button>
+</div>
+
+<div id="searchByAttributeTabContent" style="display: none;">
+  <input type="text" id="searchByAttributeInput" placeholder="Enter GIF attribute">
+  <button onclick="searchByAttribute()">Search</button>
+</div>
+  
+
 
 <!-- Блок для відображення списку Comaru GIFs -->
 <div class="gif-container" id="comaruGifContainer" style="display: none;">
@@ -99,36 +118,38 @@
           });
     }
 
-function downloadGif() {
-  const gifIdInput = document.getElementById('gifIdInput');
-  const gifId = gifIdInput.value;
+    function downloadGif() {
+    const gifIdInput = document.getElementById('gifIdInput');
+    const gifId = gifIdInput.value;
+    const downloadFileNameInput = document.getElementById('downloadFileNameInput');
+    const downloadFileName = downloadFileNameInput.value || 'downloaded.gif';
 
-  fetch(`/download-gif/${gifId}`)
-    .then(response => {
-      if (response.status === 404) {
-        console.error('GIF not found');
-      } else if (!response.ok) {
-        console.error('Error fetching GIF:', response.status);
-      } else {
-        return response.blob();
-      }
-    })
-    .then(blob => {
-      if (blob) {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'downloaded.gif'; // Ім'я файлу для завантаження
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching GIF:', error);
-    });
-}
+    fetch(`/download-gif/${gifId}?fileName=${downloadFileName}`)
+      .then(response => {
+        if (response.status === 404) {
+          console.error('GIF not found');
+        } else if (!response.ok) {
+          console.error('Error fetching GIF:', response.status);
+        } else {
+          return response.blob();
+        }
+      })
+      .then(blob => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = downloadFileName;
+          a.style.display = 'none';
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching GIF:', error);
+      });
+  }
 
 function displayGifList() {
       const allGifContainer = document.getElementById('allGifContainer');
@@ -238,7 +259,6 @@ function displayGifList() {
           console.error('Error fetching "arctic_vixen" GIF list:', error);
         });
     }
-
   function displayOthersGifList() {
       const othersGifContainer = document.getElementById('othersGifContainer');
       othersGifContainer.style.display = 'block'; // Показати контейнер для pig GIFs
@@ -264,36 +284,102 @@ function displayGifList() {
           console.error('Error fetching "pig" GIF list:', error);
         });
   }
+// Додайте функцію для пошуку за назвою GIF
+function searchByName() {
+  const searchInput = document.getElementById('searchByNameInput');
+  const searchTerm = searchInput.value;
+
+  // Здійсніть запит до сервера для пошуку за назвою
+  fetch(`/search-by-name/${searchTerm}`)
+    .then(response => response.json())
+    .then(data => {
+      const gifList = document.getElementById('gifList');
+      gifList.innerHTML = '';
+
+      if (data.length > 0) {
+        data.forEach(gif => {
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+          gifList.appendChild(listItem);
+        });
+      } else {
+        gifList.innerHTML = '<li>No matching GIFs found.</li>';
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching GIF list:', error);
+    });
+}
+function searchByAttribute() {
+      const searchByAttributeInput = document.getElementById('searchByAttributeInput');
+      const attributeSearchTerm = searchByAttributeInput.value;
+
+      // Make a request to the server to search by attribute
+      fetch(`/search-by-attribute/${attributeSearchTerm}`)
+        .then(response => response.json())
+        .then(data => {
+          const gifList = document.getElementById('gifList');
+          gifList.innerHTML = '';
+
+          if (data.length > 0) {
+            data.forEach(gif => {
+              const listItem = document.createElement('li');
+              listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+              gifList.appendChild(listItem);
+            });
+          } else {
+            gifList.innerHTML = '<li>No matching GIFs found.</li>';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching GIF list:', error);
+        });
+    }
   let activeTab = 'main'; // Збереження активної вкладки
 
   function showTab(tabName) {
-    // Зняття класу "active-tab" з поточної активної вкладки
-    const currentActiveButton = document.querySelector(`.tab-button[data-tab="${activeTab}"]`);
-    currentActiveButton.classList.remove('active-tab');
+  // Зняття класу "active-tab" з поточної активної вкладки
+  const currentActiveButton = document.querySelector(`.tab-button[data-tab="${activeTab}"]`);
+  currentActiveButton.classList.remove('active-tab');
 
-    // Встановлення класу "active-tab" для нової активної вкладки
-    const newActiveButton = document.querySelector(`.tab-button[data-tab="${tabName}"]`);
-    newActiveButton.classList.add('active-tab');
-
-    // Оновлення активної вкладки
-    activeTab = tabName;
-    // Перемикання вкладок
-    if (tabName === 'main'){
-      displayGifList();
-    }
-    else if (tabName === 'comaruFamily') {
-      displayComaruGifList();
-    }
-    else if (tabName === 'pig') {
-      displayPigGifList();
-    }
-    else if (tabName === 'others') {
-      displayOthersGifList();
-    }
-    else if (tabName === 'arctic_vixen') {
-      displayArctic_VixenGifList();
-    }
+  // Зняття класу "active-tab" з поточного активного вмісту
+  const currentActiveTabContent = document.getElementById(`${activeTab}TabContent`);
+  if (currentActiveTabContent) {
+    currentActiveTabContent.style.display = 'none';
   }
+
+  // Встановлення класу "active-tab" для нової активної вкладки
+  const newActiveButton = document.querySelector(`.tab-button[data-tab="${tabName}"]`);
+  newActiveButton.classList.add('active-tab');
+
+  // Оновлення активної вкладки
+  activeTab = tabName;
+  searchByNameTabContent.style.display = 'none';
+  searchByAttributeTabContent.style.display = 'none';
+  // Перемикання вкладок
+  if (tabName === 'main') {
+    displayGifList();
+  } else if (tabName === 'comaruFamily') {
+    displayComaruGifList();
+  } else if (tabName === 'pig') {
+    displayPigGifList();
+  } else if (tabName === 'others') {
+    displayOthersGifList();
+  } else if (tabName === 'arctic_vixen') {
+    displayArctic_VixenGifList();
+  } else if (tabName === 'searchByName') {
+    // Відображення вмісту нової вкладки "Search by name"
+    gifList.innerHTML = ''; // Очистити список
+    const searchTabContent = document.getElementById(`searchByNameTabContent`);
+      searchTabContent.style.display = 'block';
+  }
+  else if (tabName === 'searchByAttributes') {
+    // Відображення вмісту нової вкладки "Search by name"
+    gifList.innerHTML = ''; // Очистити список
+    const searchTabContent = document.getElementById(`searchByAttributeTabContent`);
+      searchTabContent.style.display = 'block';
+  }
+}
   
   </script>
   
