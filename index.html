@@ -31,7 +31,6 @@
 
   <div class="tab-divider"></div>
 
-<!-- Додайте поле введення та кнопку для пошуку за назвою GIF -->
 <div id="searchByNameTabContent" style="display: none;">
   <input type="text" id="searchByNameInput" placeholder="Enter GIF name">
   <button onclick="searchByName()">Search</button>
@@ -41,8 +40,6 @@
   <input type="text" id="searchByAttributeInput" placeholder="Enter GIF attribute">
   <button onclick="searchByAttribute()">Search</button>
 </div>
-  
-
 
 <!-- Блок для відображення списку Comaru GIFs -->
 <div class="gif-container" id="comaruGifContainer" style="display: none;">
@@ -106,8 +103,7 @@
         })
         .catch(error => {
           console.error('Error fetching GIF:', error);
-        });
-      
+        }); 
       fetch(`/gif-attributes/${gifId}`) // Отримання атрибутів
           .then(response => response.json())
           .then(attributes => {
@@ -119,36 +115,36 @@
     }
 
     function downloadGif() {
-    const gifIdInput = document.getElementById('gifIdInput');
-    const gifId = gifIdInput.value;
-    const downloadFileNameInput = document.getElementById('downloadFileNameInput');
-    const downloadFileName = downloadFileNameInput.value || 'downloaded.gif';
-
-    fetch(`/download-gif/${gifId}?fileName=${downloadFileName}`)
-      .then(response => {
-        if (response.status === 404) {
-          console.error('GIF not found');
-        } else if (!response.ok) {
-          console.error('Error fetching GIF:', response.status);
-        } else {
-          return response.blob();
-        }
-      })
-      .then(blob => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = downloadFileName;
-          a.style.display = 'none';
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching GIF:', error);
-      });
+      const gifIdInput = document.getElementById('gifIdInput');
+      const gifId = gifIdInput.value;
+      const downloadFileNameInput = document.getElementById('downloadFileNameInput');
+      const downloadFileName = downloadFileNameInput.value || 'downloaded.gif';
+  
+      fetch(`/download-gif/${gifId}?fileName=${downloadFileName}`)
+        .then(response => {
+          if (response.status === 404) {
+            console.error('GIF not found');
+          } else if (!response.ok) {
+            console.error('Error fetching GIF:', response.status);
+          } else {
+            return response.blob();
+          }
+        })
+        .then(blob => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = downloadFileName;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching GIF:', error);
+        });
   }
 
 function displayGifList() {
@@ -284,12 +280,10 @@ function displayGifList() {
           console.error('Error fetching "pig" GIF list:', error);
         });
   }
-// Додайте функцію для пошуку за назвою GIF
 function searchByName() {
   const searchInput = document.getElementById('searchByNameInput');
   const searchTerm = searchInput.value;
 
-  // Здійсніть запит до сервера для пошуку за назвою
   fetch(`/search-by-name/${searchTerm}`)
     .then(response => response.json())
     .then(data => {
@@ -314,13 +308,11 @@ function searchByAttribute() {
       const searchByAttributeInput = document.getElementById('searchByAttributeInput');
       const attributeSearchTerm = searchByAttributeInput.value;
 
-      // Make a request to the server to search by attribute
       fetch(`/search-by-attribute/${attributeSearchTerm}`)
         .then(response => response.json())
         .then(data => {
           const gifList = document.getElementById('gifList');
           gifList.innerHTML = '';
-
           if (data.length > 0) {
             data.forEach(gif => {
               const listItem = document.createElement('li');
@@ -368,20 +360,16 @@ function searchByAttribute() {
   } else if (tabName === 'arctic_vixen') {
     displayArctic_VixenGifList();
   } else if (tabName === 'searchByName') {
-    // Відображення вмісту нової вкладки "Search by name"
     gifList.innerHTML = ''; // Очистити список
     const searchTabContent = document.getElementById(`searchByNameTabContent`);
       searchTabContent.style.display = 'block';
   }
   else if (tabName === 'searchByAttributes') {
-    // Відображення вмісту нової вкладки "Search by name"
     gifList.innerHTML = ''; // Очистити список
     const searchTabContent = document.getElementById(`searchByAttributeTabContent`);
       searchTabContent.style.display = 'block';
   }
 }
-  
   </script>
-  
 </body>
 </html>
