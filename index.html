@@ -13,10 +13,14 @@
 
 <button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
 <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
+<button class="tab-button" data-tab="postGif" onclick="showTab('postGif')">Add Gif</button>
   </div>
-  <h2>File Upload</h2>
-  <form action="/upload" method="post" enctype="multipart/form-data">
+  
+  <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" style="display: none;">
+    <h2>File Upload</h2>
     <input type="file" name="file">
+    <input type="text" name="attributes" id="attributesInput" placeholder="Enter attributes (comma-separated)">
+    <input type="hidden" name="defaultAttribute" value="all"> <!-- Add a hidden input for the default attribute -->
     <input type="submit" value="Upload File">
   </form>
 
@@ -119,7 +123,8 @@
       const gifId = gifIdInput.value;
       const downloadFileNameInput = document.getElementById('downloadFileNameInput');
       const downloadFileName = downloadFileNameInput.value || 'downloaded.gif';
-  
+      const attributesInput = document.getElementById('attributesInput');
+      attributesInput.value = 'all';
       fetch(`/download-gif/${gifId}?fileName=${downloadFileName}`)
         .then(response => {
           if (response.status === 404) {
@@ -348,6 +353,8 @@ function searchByAttribute() {
   activeTab = tabName;
   searchByNameTabContent.style.display = 'none';
   searchByAttributeTabContent.style.display = 'none';
+  const uploadForm = document.getElementById('uploadForm');
+  uploadForm.style.display = 'none';
   // Перемикання вкладок
   if (tabName === 'main') {
     displayGifList();
@@ -369,6 +376,9 @@ function searchByAttribute() {
     const searchTabContent = document.getElementById(`searchByAttributeTabContent`);
       searchTabContent.style.display = 'block';
   }
+  else if (tabName === 'postGif') {
+        uploadForm.style.display = 'block';
+      }
 }
   </script>
 </body>

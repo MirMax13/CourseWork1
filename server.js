@@ -173,6 +173,16 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   try {
     if (req.file) {
       const { originalname, buffer, mimetype } = req.file;
+      const defaultAttribute = req.body.defaultAttribute || 'all';
+      let additionalAttributes = [];
+
+      // Check if additional attributes were provided
+      if (req.body.attributes) {
+        additionalAttributes = req.body.attributes.split(',').map(attribute => attribute.trim());
+      }
+
+      // Include the default attribute and additional attributes
+      const allAttributes = [...new Set([defaultAttribute, ...additionalAttributes])];
 
       // Check if the uploaded file is a GIF
       if (mimetype !== 'image/gif') {
@@ -187,7 +197,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         filename: originalname,
         data: fileData,
         contentType: mimetype,
-        attributes: ['all'],
+        attributes: allAttributes,
       });
 
       await gif.save();
