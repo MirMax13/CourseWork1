@@ -169,28 +169,38 @@ app.get('/search-by-attribute/:attribute', async (req, res) => {
   }
 });
 
-app.post('/upload', upload.single('file'), async (req, res) => { // POST-запит для завантаження файлів
+app.post('/upload', upload.single('file'), async (req, res) => {
   try {
     if (req.file) {
       const { originalname, buffer, mimetype } = req.file;
 
-      const fileData = fs.readFileSync(req.file.path); // Зчитування файлів як бінарні дані
-      
+      // Check if the uploaded file is a GIF
+      if (mimetype !== 'image/gif') {
+        // If it's not a GIF, delete the temporary file and send an error response
+        fs.unlinkSync(req.file.path);
+        return res.status(400).send('Only GIF files are allowed.');
+      }
+
+      const fileData = fs.readFileSync(req.file.path);
+
       const gif = new GifModel({
         filename: originalname,
         data: fileData,
         contentType: mimetype,
-        attributes: ['all'], 
+        attributes: ['all'],
       });
 
       await gif.save();
 
-      res.send('Файл GIF успішно завантажено та збережено в базі .');
+      // Delete the temporary file after saving to the database
+      fs.unlinkSync(req.file.path);
+
+      res.send('File successfully uploaded and saved to the database.');
     } else {
-      res.status(400).send('Помилка: Файл не був завантажений.');
+      res.status(400).send('Error: File was not uploaded.');
     }
   } catch (error) {
-    res.status(500).send('Помилка збереження файлу в базу даних.');
+    res.status(500).send('Error saving file to the database.');
   }
 });
 
