@@ -13,7 +13,7 @@
 
 <button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
 <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
-<button class="tab-button" data-tab="modGif" onclick="showTab('modGif')">Add or Edit Gif</button>
+<button class="tab-button" data-tab="modGif" onclick="showTab('modGif')">Modify Gifs</button>
   </div>
   
   <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" style="display: none;">
@@ -45,6 +45,7 @@
 </div>
 
   <div class="tab-divider"></div>
+
 
 <div id="searchByNameTabContent" style="display: none;">
   <input type="text" id="searchByNameInput" placeholder="Enter GIF name">
@@ -406,6 +407,22 @@ function deleteGif() {
     });
 }
 
+let isAuthenticated = false;
+
+function authenticateAndShowTab(tabName) {
+  const login = prompt('Enter login:');
+  const password = prompt('Enter password:');
+
+  // Порівняння логіну і пароля
+  if (login === 'Admin' && password === 'Steo9765') {
+    isAuthenticated = true;
+    showTab(tabName);
+  } else {
+    isAuthenticated = false;
+    alert('Invalid login or password. Please try again.');
+  }
+}
+
     let activeTab = 'main'; // Збереження активної вкладки
 
   function showTab(tabName) {
@@ -456,9 +473,13 @@ function deleteGif() {
 
   }
   else if (tabName === 'modGif') {
-        uploadForm.style.display = 'block';
-        updateNameForm.style.display = 'block';
-        const ViewAndDownloadGIFForm = document.getElementById('ViewAndDownloadGIFForm');
+    const modGifButton = document.querySelector('.tab-button[data-tab="modGif"]');
+    modGifButton.addEventListener('click', () => {
+    authenticateAndShowTab('modGif');
+      });
+    uploadForm.style.display = 'block';
+    updateNameForm.style.display = 'block';
+    const ViewAndDownloadGIFForm = document.getElementById('ViewAndDownloadGIFForm');
     ViewAndDownloadGIFForm.style.display = 'none';
     
     // Відобразити список GIF
@@ -468,6 +489,8 @@ function deleteGif() {
       }
 }
 document.getElementById('updateNameButton').addEventListener('click', updateGifName);
+
+
   </script>
 </body>
 </html>
