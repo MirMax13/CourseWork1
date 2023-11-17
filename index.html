@@ -13,7 +13,7 @@
 
 <button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
 <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
-<button class="tab-button" data-tab="postGif" onclick="showTab('postGif')">Add Gif</button>
+<button class="tab-button" data-tab="modGif" onclick="showTab('modGif')">Add or Edit Gif</button>
   </div>
   
   <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" style="display: none;">
@@ -24,6 +24,8 @@
     <input type="submit" value="Upload File">
   </form>
 
+
+<div id="ViewAndDownloadGIFForm" style="display: block;">
   <h2>View and Download GIF</h2>
   <input type="text" id="gifIdInput" placeholder="GIF ID"> <!-- Текстове поле для введення ідентифікатора GIF -->
   <input type="text" id="downloadFileNameInput" placeholder="Enter file name (in Latin)">
@@ -32,6 +34,15 @@
   <video id="" controls class="styled-video" style="display: none;"></video> <!-- <video> для відображення GIF з класом "styled-video" -->
   <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
   <div id="gifAttributes"></div>
+</div>
+
+<div id="updateNameForm" style="display: none;">
+  <h2>Update GIF Name</h2>
+  <input type="text" id="gifIdInputMod" placeholder="GIF ID"> <!-- Текстове поле для введення ідентифікатора GIF -->
+  <input type="text" id="updateNameInput" placeholder="Enter new GIF name">
+  <button onclick="updateGifName()">Update Name</button>
+  <button onclick="deleteGif()">Delete GIF</button>
+</div>
 
   <div class="tab-divider"></div>
 
@@ -180,7 +191,10 @@ function displayGifList() {
 
     function showGif(gifId) {
       const gifIdInput = document.getElementById('gifIdInput');
+      const gifIdInputMod = document.getElementById('gifIdInputMod');
+      gifIdInputMod.value = gifId;
       gifIdInput.value = gifId;
+
       openGif();
     }
 
@@ -332,7 +346,67 @@ function searchByAttribute() {
           console.error('Error fetching GIF list:', error);
         });
     }
-  let activeTab = 'main'; // Збереження активної вкладки
+    function updateGifName() {
+  const gifIdInputUpdate = document.getElementById('gifIdInputMod');
+  const updateNameInput = document.getElementById('updateNameInput');
+  const gifId = gifIdInputUpdate.value;
+  const newName = updateNameInput.value;
+
+  // Make sure both GIF ID and new name are provided
+  if (!gifId || !newName) {
+    alert('Please enter both GIF ID and new name.');
+    return;
+  }
+
+  fetch(`/update-gif/${gifId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ newName }),
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('GIF name updated successfully.');
+        // You can add additional logic here, such as updating the UI.
+      } else {
+        console.error('Error updating GIF name:', response.status);
+      }
+    })
+    .catch(error => {
+      console.error('Error updating GIF name:', error);
+    });
+}  
+  
+function deleteGif() {
+  const gifIdInputDel = document.getElementById('gifIdInputMod');
+  const gifId = gifIdInputDel.value;
+
+  // Перевірте, чи введено ідентифікатор GIF
+  if (!gifId) {
+    alert('Please enter GIF ID to delete.');
+    return;
+  }
+
+  fetch(`/gif/${gifId}`, {
+    method: 'DELETE',
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('GIF deleted successfully.');
+        // Можна додати додаткову логіку тут, наприклад, оновлення UI.
+      } else if (response.status === 404) {
+        console.error('GIF not found.');
+      } else {
+        console.error('Error deleting GIF:', response.status);
+      }
+    })
+    .catch(error => {
+      console.error('Error deleting GIF:', error);
+    });
+}
+
+    let activeTab = 'main'; // Збереження активної вкладки
 
   function showTab(tabName) {
   // Зняття класу "active-tab" з поточної активної вкладки
@@ -354,7 +428,11 @@ function searchByAttribute() {
   searchByNameTabContent.style.display = 'none';
   searchByAttributeTabContent.style.display = 'none';
   const uploadForm = document.getElementById('uploadForm');
+  const updateNameForm = document.getElementById('updateNameForm');
+  const ViewAndDownloadGIFForm = document.getElementById(`ViewAndDownloadGIFForm`);
   uploadForm.style.display = 'none';
+  updateNameForm.style.display = 'none';
+  ViewAndDownloadGIFForm.style.display = 'block';
   // Перемикання вкладок
   if (tabName === 'main') {
     displayGifList();
@@ -375,11 +453,21 @@ function searchByAttribute() {
     gifList.innerHTML = ''; // Очистити список
     const searchTabContent = document.getElementById(`searchByAttributeTabContent`);
       searchTabContent.style.display = 'block';
+
   }
-  else if (tabName === 'postGif') {
+  else if (tabName === 'modGif') {
         uploadForm.style.display = 'block';
+        updateNameForm.style.display = 'block';
+        const ViewAndDownloadGIFForm = document.getElementById('ViewAndDownloadGIFForm');
+    ViewAndDownloadGIFForm.style.display = 'none';
+    
+    // Відобразити список GIF
+    const allGifContainer = document.getElementById('allGifContainer');
+    allGifContainer.style.display = 'block';
+    displayGifList();
       }
 }
+document.getElementById('updateNameButton').addEventListener('click', updateGifName);
   </script>
 </body>
 </html>

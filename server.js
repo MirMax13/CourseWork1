@@ -4,6 +4,7 @@ const { MongoClient } = require('mongodb');
 const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser'); // Import body-parser
 
 const app = express();
 const port = 3000;
@@ -40,6 +41,7 @@ db.once('open', async () => {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json()); // Use body-parser middleware
 
 app.get('/', (req, res) => { // GET-запит для відображення форми завантаження файлів
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -166,6 +168,50 @@ app.get('/search-by-attribute/:attribute', async (req, res) => {
   } catch (error) {
     console.error('Error searching by attribute:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.put('/update-gif/:id', async (req, res) => {
+  try {
+    const gifId = req.params.id;
+    const newName = req.body.newName;
+
+    // Validate if newName is provided
+    if (!newName) {
+      return res.status(400).send('New name is required.');
+    }
+
+    const updatedGif = await GifModel.findOneAndUpdate(
+      { _id: gifId },
+      { $set: { filename: newName } },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedGif) {
+      return res.status(404).send('GIF not found.');
+    }
+
+    res.send('GIF name updated successfully.');
+  } catch (error) {
+    console.error('Error updating GIF name:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.delete('/gif/:id', async (req, res) => {
+  try {
+    const gifId = req.params.id;
+
+    const deletedGif = await GifModel.findByIdAndDelete(gifId);
+
+    if (!deletedGif) {
+      return res.status(404).send('GIF not found.');
+    }
+
+    res.send('GIF deleted successfully.');
+  } catch (error) {
+    console.error('Error deleting GIF:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
