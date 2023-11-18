@@ -5,9 +5,12 @@ const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser'); // Import body-parser
+const session = require('express-session');
 
 const app = express();
 const port = 3000;
+
+
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
@@ -42,6 +45,11 @@ db.once('open', async () => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json()); // Use body-parser middleware
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+}));
 
 app.get('/', (req, res) => { // GET-запит для відображення форми завантаження файлів
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -257,6 +265,19 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     }
   } catch (error) {
     res.status(500).send('Error saving file to the database.');
+  }
+});
+
+app.post('/check-auth', (req, res) => {
+  const { login, password } = req.body;
+
+  // Порівняйте логін і пароль з даними адміна
+  if (login === 'Admin' && password === 'Steo9765') {
+    req.session.isAuthenticated = true;
+    res.status(200).send('Authentication successful');
+  } else {
+    req.session.isAuthenticated = false;
+    res.status(401).send('Invalid login or password');
   }
 });
 

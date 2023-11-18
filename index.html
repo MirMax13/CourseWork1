@@ -94,6 +94,8 @@
 </div>
 
   <script>
+    let isAuthenticated = false;
+
     function openGif() {
       console.log('Button clicked'); // Перевірка чи кнопка натиснута
       const gifIdInput = document.getElementById('gifIdInput');
@@ -407,20 +409,32 @@ function deleteGif() {
     });
 }
 
-let isAuthenticated = false;
+
 
 function authenticateAndShowTab(tabName) {
   const login = prompt('Enter login:');
   const password = prompt('Enter password:');
 
-  // Порівняння логіну і пароля
-  if (login === 'Admin' && password === 'Steo9765') {
-    isAuthenticated = true;
-    showTab(tabName);
-  } else {
-    isAuthenticated = false;
-    alert('Invalid login or password. Please try again.');
-  }
+  // Виклик серверного маршруту для перевірки аутентифікації
+  fetch('/check-auth', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ login, password }),
+  })
+    .then(response => {
+      if (response.ok) {
+        isAuthenticated = true;
+        localStorage.setItem('isAuthenticated', 'true');
+      } else {
+        isAuthenticated = false;
+        alert('Invalid login or password. Please try again.');
+      }
+    })
+    .catch(error => {
+      console.error('Error checking authentication:', error);
+    });
 }
 
     let activeTab = 'main'; // Збереження активної вкладки
@@ -447,6 +461,8 @@ function authenticateAndShowTab(tabName) {
   const uploadForm = document.getElementById('uploadForm');
   const updateNameForm = document.getElementById('updateNameForm');
   const ViewAndDownloadGIFForm = document.getElementById(`ViewAndDownloadGIFForm`);
+  const savedAuthStatus = localStorage.getItem('isAuthenticated');
+  isAuthenticated = savedAuthStatus === 'true';
   uploadForm.style.display = 'none';
   updateNameForm.style.display = 'none';
   ViewAndDownloadGIFForm.style.display = 'block';
@@ -473,20 +489,20 @@ function authenticateAndShowTab(tabName) {
 
   }
   else if (tabName === 'modGif') {
-    const modGifButton = document.querySelector('.tab-button[data-tab="modGif"]');
-    modGifButton.addEventListener('click', () => {
-    authenticateAndShowTab('modGif');
-      });
+    if (!isAuthenticated){
+      authenticateAndShowTab('modGif');
+      return;
+    }
     uploadForm.style.display = 'block';
     updateNameForm.style.display = 'block';
     const ViewAndDownloadGIFForm = document.getElementById('ViewAndDownloadGIFForm');
     ViewAndDownloadGIFForm.style.display = 'none';
-    
     // Відобразити список GIF
     const allGifContainer = document.getElementById('allGifContainer');
     allGifContainer.style.display = 'block';
     displayGifList();
-      }
+  }
+
 }
 document.getElementById('updateNameButton').addEventListener('click', updateGifName);
 
