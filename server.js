@@ -10,8 +10,6 @@ const session = require('express-session');
 const app = express();
 const port = 3000;
 
-
-
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, 'uploads/'); // Папка для зберігання завантажених файлів
@@ -44,18 +42,18 @@ db.once('open', async () => {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.json()); // Use body-parser middleware
+app.use(bodyParser.json());
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
   saveUninitialized: false,
 }));
 
-app.get('/', (req, res) => { // GET-запит для відображення форми завантаження файлів
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get('/gif/:id', async (req, res) => { // GET-запит для відображення GIF
+app.get('/gif/:id', async (req, res) => {
 try {
   const gifId = req.params.id;
   const gif = await GifModel.findById(gifId);
@@ -86,6 +84,21 @@ app.get('/gif-attributes/:id', async (req, res) => {
   }
 });
 
+app.get('/gif-name/:id', async (req, res) => {
+  try {
+    const gifId = req.params.id;
+
+    const gif = await GifModel.findById(gifId);
+    if (!gif) {
+      return res.status(404).send('GIF not found');
+    }
+
+    res.json(gif.filename);
+  } catch (error) {
+    res.status(500).send('Помилка отримання атрибутів GIF з бази даних');
+  }
+});
+
 app.get('/download-gif/:id', async (req, res) => {
     try {
     const gifId = req.params.id;
@@ -105,8 +118,6 @@ app.get('/download-gif/:id', async (req, res) => {
   }
 });
 
-
-// GET-маршрут для отримання списку гіфок
 app.get('/gif-list', async (req, res) => {
   try {
     const gifs = await GifModel.find({}, 'filename');
@@ -166,11 +177,9 @@ app.get('/search-by-attribute/:attribute', async (req, res) => {
   const attribute = req.params.attribute;
   try {
     const gifs = await GifModel.find({ attributes: attribute }).exec();
-    // Truncate or omit parts of the data to avoid RangeError
     const truncatedGifs = gifs.map(gif => ({
       _id: gif._id,
       filename: gif.filename,
-      // Add other properties as needed
     }));
     res.json(truncatedGifs);
   } catch (error) {
@@ -184,7 +193,6 @@ app.put('/update-gif/:id', async (req, res) => {
     const gifId = req.params.id;
     const newName = req.body.newName;
 
-    // Validate if newName is provided
     if (!newName) {
       return res.status(400).send('New name is required.');
     }
@@ -192,24 +200,23 @@ app.put('/update-gif/:id', async (req, res) => {
     const updatedGif = await GifModel.findOneAndUpdate(
       { _id: gifId },
       { $set: { filename: newName } },
-      { new: true } // Return the updated document
+      { new: true } // Повернути оновлений документ
     );
 
     if (!updatedGif) {
       return res.status(404).send('GIF not found.');
     }
 
-    res.send('GIF name updated successfully.');
-  } catch (error) {
-    console.error('Error updating GIF name:', error);
-    res.status(500).send('Internal Server Error');
-  }
+      res.send('GIF name updated successfully.');
+    } catch (error) {
+      console.error('Error updating GIF name:', error);
+      res.status(500).send('Internal Server Error');
+    }
 });
 
 app.delete('/gif/:id', async (req, res) => {
   try {
     const gifId = req.params.id;
-
     const deletedGif = await GifModel.findByIdAndDelete(gifId);
 
     if (!deletedGif) {
@@ -230,33 +237,29 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       const defaultAttribute = req.body.defaultAttribute || 'all';
       let additionalAttributes = [];
 
-      // Check if additional attributes were provided
       if (req.body.attributes) {
         additionalAttributes = req.body.attributes.split(',').map(attribute => attribute.trim());
       }
 
-      // Include the default attribute and additional attributes
+      // Додати атрибути
       const allAttributes = [...new Set([defaultAttribute, ...additionalAttributes])];
 
-      // Check if the uploaded file is a GIF
+      // Перевірка на GIF
       if (mimetype !== 'image/gif') {
-        // If it's not a GIF, delete the temporary file and send an error response
         fs.unlinkSync(req.file.path);
         return res.status(400).send('Only GIF files are allowed.');
       }
 
       const fileData = fs.readFileSync(req.file.path);
-
       const gif = new GifModel({
         filename: originalname,
         data: fileData,
         contentType: mimetype,
         attributes: allAttributes,
       });
-
       await gif.save();
 
-      // Delete the temporary file after saving to the database
+      // Видалити тимчасовий файл
       fs.unlinkSync(req.file.path);
 
       res.send('File successfully uploaded and saved to the database.');
@@ -271,7 +274,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 app.post('/check-auth', (req, res) => {
   const { login, password } = req.body;
 
-  // Порівняйте логін і пароль з даними адміна
+  // Порівняння логіну і паролю з даними адміна
   if (login === 'Admin' && password === 'Steo9765') {
     req.session.isAuthenticated = true;
     res.status(200).send('Authentication successful');

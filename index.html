@@ -6,101 +6,109 @@
 <body>
   <div id="tabs">
     <button class="tab-button active-tab" data-tab="main" onclick="showTab('main')">Main</button>
-  <button class="tab-button" data-tab="comaruFamily" onclick="showTab('comaruFamily')">Comaru Family</button>
-  <button class="tab-button" data-tab="pig" onclick="showTab('pig')">Pig</button>
-  <button class="tab-button" data-tab="arctic_vixen" onclick="showTab('arctic_vixen')">Arctic Vixen</button>
-  <button class="tab-button" data-tab="others" onclick="showTab('others')">Others</button>
+    <button class="tab-button" data-tab="comaruFamily" onclick="showTab('comaruFamily')">Comaru Family</button>
+    <button class="tab-button" data-tab="pig" onclick="showTab('pig')">Pig</button>
+    <button class="tab-button" data-tab="arctic_vixen" onclick="showTab('arctic_vixen')">Arctic Vixen</button>
+    <button class="tab-button" data-tab="others" onclick="showTab('others')">Others</button>
 
-<button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
-<button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
-<button class="tab-button" data-tab="modGif" onclick="showTab('modGif')">Modify Gifs</button>
+    <button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
+    <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
+    <button class="tab-button" data-tab="modGif" onclick="showTab('modGif')">Modify Gifs</button>
   </div>
   
   <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" style="display: none;">
     <h2>File Upload</h2>
     <input type="file" name="file">
     <input type="text" name="attributes" id="attributesInput" placeholder="Enter attributes (comma-separated)">
-    <input type="hidden" name="defaultAttribute" value="all"> <!-- Add a hidden input for the default attribute -->
+    <input type="hidden" name="defaultAttribute" value="all"> <!-- Прихований ввід для атрибута за замовчуванням -->
     <input type="submit" value="Upload File">
   </form>
 
-
-<div id="ViewAndDownloadGIFForm" style="display: block;">
-  <h2>View and Download GIF</h2>
-  <input type="text" id="gifIdInput" placeholder="GIF ID"> <!-- Текстове поле для введення ідентифікатора GIF -->
-  <input type="text" id="downloadFileNameInput" placeholder="Enter file name (in Latin)">
-  <button onclick="openGif()">Open GIF</button>
-  <button onclick="downloadGif()">Download GIF</button>
-  <video id="" controls class="styled-video" style="display: none;"></video> <!-- <video> для відображення GIF з класом "styled-video" -->
-  <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
-  <div id="gifAttributes"></div>
-</div>
-
-<div id="updateNameForm" style="display: none;">
-  <h2>Update GIF Name</h2>
-  <input type="text" id="gifIdInputMod" placeholder="GIF ID"> <!-- Текстове поле для введення ідентифікатора GIF -->
-  <input type="text" id="updateNameInput" placeholder="Enter new GIF name">
-  <button onclick="updateGifName()">Update Name</button>
-  <button onclick="deleteGif()">Delete GIF</button>
-</div>
-
-  <div class="tab-divider"></div>
-
-
-<div id="searchByNameTabContent" style="display: none;">
-  <input type="text" id="searchByNameInput" placeholder="Enter GIF name">
-  <button onclick="searchByName()">Search</button>
-</div>
-
-<div id="searchByAttributeTabContent" style="display: none;">
-  <input type="text" id="searchByAttributeInput" placeholder="Enter GIF attribute">
-  <button onclick="searchByAttribute()">Search</button>
-</div>
-
-<!-- Блок для відображення списку Comaru GIFs -->
-<div class="gif-container" id="comaruGifContainer" style="display: none;">
-  <div class="gif-columns">
-    <ul id="comaruGifList"></ul>
+  <div id="ViewAndDownloadGIFForm" style="display: block;">
+    <h2>View and Download GIF</h2>
+    <input type="text" id="gifIdInput" placeholder="GIF ID">
+    <input type="text" id="downloadFileNameInput" placeholder="Enter file name (in Latin)">
+    <button onclick="openGif()">Open GIF</button>
+    <button onclick="downloadGif()">Download GIF</button>
+    
+    <video id="" controls class="styled-video" style="display: none;"></video> <!-- <video> для відображення GIF з класом "styled-video" -->
+    <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
+    <div id="gifAttributes"></div>
+    <div id="gifName"></div>
   </div>
-</div>
 
-<!-- Блок для відображення списку Pig GIFs -->
-<div class="gif-container" id="pigGifContainer" style="display: none;">
-  <div class="gif-columns">
-    <ul id="pigGifList"></ul>
+  <div id="updateNameForm" style="display: none;">
+    <h2>Update GIF Name</h2>
+    <input type="text" id="gifIdInputMod" placeholder="GIF ID">
+    <input type="text" id="updateNameInput" placeholder="Enter new GIF name">
+    <button onclick="updateGifName()">Update Name</button>
+    <button onclick="deleteGif()">Delete GIF</button>
   </div>
-</div>
 
-<!-- Блок для відображення списку Others GIFs -->
-<div class="gif-container" id="othersGifContainer" style="display: none;">
-  <div class="gif-columns">
-    <ul id="othersGifList"></ul>
+  <div id="searchByNameTabContent" style="display: none;">
+    <input type="text" id="searchByNameInput" placeholder="Enter GIF name">
+    <button onclick="searchByName()">Search</button>
   </div>
-</div>
 
-<!-- Блок для відображення списку Arctic_Vixen GIFs -->
-<div class="gif-container" id="arctic_vixenGifContainer" style="display: none;">
-  <div class="gif-columns">
-    <ul id="arctic_vixenGifList"></ul>
+  <div id="searchByAttributeTabContent" style="display: none;">
+    <input type="text" id="searchByAttributeInput" placeholder="Enter GIF attribute">
+    <button onclick="searchByAttribute()">Search</button>
   </div>
-</div>
 
-<!-- Блок для відображення списку гіфок -->
-<div class="gif-container" id="allGifContainer" style="display: none;">
-  <h2>List of GIFs</h2>
-  <div class="gif-columns">
-    <ul id="gifList"></ul>
+  <div id="zoomControls">
+    <button onclick="zoomIn()">Zoom In</button>
+    <button onclick="zoomOut()">Zoom Out</button>
+    <button onclick="resetZoom()">Reset Zoom</button>
   </div>
-</div>
+
+  <!-- Блок для відображення списку гіфок -->
+  <div class="gif-container" id="allGifContainer" style="display: none;">
+    <h2>List of GIFs</h2>
+    <div class="gif-columns">
+      <ul id="gifList"></ul>
+    </div>
+  </div>
+
+  <!-- Блок для відображення списку Comaru GIFs -->
+  <div class="gif-container" id="comaruGifContainer" style="display: none;">
+    <div class="gif-columns">
+      <ul id="comaruGifList"></ul>
+    </div>
+  </div>
+
+  <!-- Блок для відображення списку Pig GIFs -->
+  <div class="gif-container" id="pigGifContainer" style="display: none;">
+    <div class="gif-columns">
+      <ul id="pigGifList"></ul>
+    </div>
+  </div>
+
+  <!-- Блок для відображення списку Others GIFs -->
+  <div class="gif-container" id="othersGifContainer" style="display: none;">
+    <div class="gif-columns">
+      <ul id="othersGifList"></ul>
+    </div>
+  </div>
+
+  <!-- Блок для відображення списку Arctic_Vixen GIFs -->
+  <div class="gif-container" id="arctic_vixenGifContainer" style="display: none;">
+    <div class="gif-columns">
+      <ul id="arctic_vixenGifList"></ul>
+    </div>
+  </div>
 
   <script>
     let isAuthenticated = false;
+    let currentScale = 1; // Початковий масштаб
+    let activeTab = 'main'; // Збереження активної вкладки
 
     function openGif() {
-      console.log('Button clicked'); // Перевірка чи кнопка натиснута
       const gifIdInput = document.getElementById('gifIdInput');
-      const gifId = gifIdInput.value; // Отримання ідентифікатор GIF з текстового поля
+      const gifId = gifIdInput.value;
       const gifImage = document.getElementById('gifImage');
+      currentScale = 1; 
+      applyScale();
+      
       fetch(`/gif/${gifId}`)
         .then(response => {
           if (response.status === 404) {
@@ -116,7 +124,8 @@
             const gifUrl = URL.createObjectURL(blob);
             gifImage.src = gifUrl;
             gifImage.style.display = 'block';
-        console.log(blob);
+            currentScale = 1;
+            console.log(blob);
           }
         })
         .catch(error => {
@@ -129,6 +138,14 @@
           })
           .catch(error => {
             console.error('Error fetching attributes:', error);
+          });
+      fetch(`/gif-name/${gifId}`) // Отримання назви
+          .then(response => response.json())
+          .then(filename => {
+            document.getElementById('gifName').textContent = `GIF Name: ${filename}`;
+          })
+          .catch(error => {
+            console.error('Error fetching GIF name:', error);
           });
     }
 
@@ -166,14 +183,13 @@
         });
   }
 
-function displayGifList() {
+    function displayGifList() {
       const allGifContainer = document.getElementById('allGifContainer');
       allGifContainer.style.display = 'block'; 
 
       const gifList = document.getElementById('gifList');
       gifList.innerHTML = ''; // Очистити список
 
-      // Запит до сервера для отримання списку гіфок
       fetch('/gif-list')
         .then(response => response.json())
         .then(data => {
@@ -197,7 +213,6 @@ function displayGifList() {
       const gifIdInputMod = document.getElementById('gifIdInputMod');
       gifIdInputMod.value = gifId;
       gifIdInput.value = gifId;
-
       openGif();
     }
 
@@ -209,7 +224,6 @@ function displayGifList() {
       const gifList = document.getElementById('gifList');
       gifList.innerHTML = ''; // Очистити список
 
-      // Запит до сервера для отримання списку "Comaru" гіфок
       fetch('/Comaru-gif-list')
         .then(response => response.json())
         .then(data => {
@@ -227,64 +241,61 @@ function displayGifList() {
           console.error('Error fetching "Comaru" GIF list:', error);
         });
     }
-  function displayPigGifList() {
-      const pigGifContainer = document.getElementById('pigGifContainer');
-      pigGifContainer.style.display = 'block'; // Показати контейнер для pig GIFs
+    function displayPigGifList() {
+        const pigGifContainer = document.getElementById('pigGifContainer');
+        pigGifContainer.style.display = 'block'; // Показати контейнер для pig GIFs
 
-      const gifList = document.getElementById('gifList');
-      gifList.innerHTML = ''; // Очистити список
+        const gifList = document.getElementById('gifList');
+        gifList.innerHTML = ''; // Очистити список
 
-      // Запит до сервера для отримання списку "pig" гіфок
-      fetch('/Pig-gif-list')
-        .then(response => response.json())
-        .then(data => {
-          if (data.length > 0) {
-            data.forEach(gif => {
-              const listItem = document.createElement('li');
-              listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
-              gifList.appendChild(listItem);
-            });
-          } else {
-            gifList.innerHTML = '<li>No "others" GIFs available.</li>';
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching "others" GIF list:', error);
-        });
-    }
-  function displayArctic_VixenGifList() {
-      const arctic_vixenGifContainer = document.getElementById('arctic_vixenGifContainer');
-      arctic_vixenGifContainer.style.display = 'block'; // Показати контейнер для pig GIFs
+        fetch('/Pig-gif-list')
+          .then(response => response.json())
+          .then(data => {
+            if (data.length > 0) {
+              data.forEach(gif => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+                gifList.appendChild(listItem);
+              });
+            } else {
+              gifList.innerHTML = '<li>No "others" GIFs available.</li>';
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching "others" GIF list:', error);
+          });
+      }
+    function displayArctic_VixenGifList() {
+        const arctic_vixenGifContainer = document.getElementById('arctic_vixenGifContainer');
+        arctic_vixenGifContainer.style.display = 'block'; // Показати контейнер для pig GIFs
 
-      const gifList = document.getElementById('gifList');
-      gifList.innerHTML = ''; // Очистити список
+        const gifList = document.getElementById('gifList');
+        gifList.innerHTML = ''; // Очистити список
 
-      // Запит до сервера для отримання списку "arctic_vixen" гіфок
-      fetch('/Arctic_Vixen-gif-list')
-        .then(response => response.json())
-        .then(data => {
-          if (data.length > 0) {
-            data.forEach(gif => {
-              const listItem = document.createElement('li');
-              listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
-              gifList.appendChild(listItem);
-            });
-          } else {
-            gifList.innerHTML = '<li>No "arctic_vixen" GIFs available.</li>';
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching "arctic_vixen" GIF list:', error);
-        });
-    }
-  function displayOthersGifList() {
+        fetch('/Arctic_Vixen-gif-list')
+          .then(response => response.json())
+          .then(data => {
+            if (data.length > 0) {
+              data.forEach(gif => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+                gifList.appendChild(listItem);
+              });
+            } else {
+              gifList.innerHTML = '<li>No "arctic_vixen" GIFs available.</li>';
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching "arctic_vixen" GIF list:', error);
+          });
+      }
+    function displayOthersGifList() {
       const othersGifContainer = document.getElementById('othersGifContainer');
       othersGifContainer.style.display = 'block'; // Показати контейнер для pig GIFs
 
       const gifList = document.getElementById('gifList');
       gifList.innerHTML = ''; // Очистити список
 
-      // Запит до сервера для отримання списку "others" гіфок
       fetch('/Others-gif-list')
         .then(response => response.json())
         .then(data => {
@@ -302,31 +313,53 @@ function displayGifList() {
           console.error('Error fetching "pig" GIF list:', error);
         });
   }
-function searchByName() {
-  const searchInput = document.getElementById('searchByNameInput');
-  const searchTerm = searchInput.value;
 
-  fetch(`/search-by-name/${searchTerm}`)
-    .then(response => response.json())
-    .then(data => {
-      const gifList = document.getElementById('gifList');
-      gifList.innerHTML = '';
+    const gifImage = document.getElementById('gifImage'); // Отримання елемента зображення
 
-      if (data.length > 0) {
-        data.forEach(gif => {
-          const listItem = document.createElement('li');
-          listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
-          gifList.appendChild(listItem);
-        });
-      } else {
-        gifList.innerHTML = '<li>No matching GIFs found.</li>';
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching GIF list:', error);
+    function zoomIn() {
+      currentScale += 0.1; // Збільшення масштабу на 10%
+      applyScale();
+    }
+
+    function zoomOut() {
+      currentScale -= 0.1; // Зменшення масштабу на 10%
+      applyScale();
+    }
+
+    function resetZoom() {
+      currentScale = 1; // Повернення до звичайного масштабу
+      applyScale();
+    }
+
+    function applyScale() {
+      gifImage.style.transform = `scale(${currentScale})`;// Застосування масштабу до зображення
+    }
+
+    function searchByName() {
+      const searchInput = document.getElementById('searchByNameInput');
+      const searchTerm = searchInput.value;
+
+      fetch(`/search-by-name/${searchTerm}`)
+        .then(response => response.json())
+        .then(data => {
+          const gifList = document.getElementById('gifList');
+          gifList.innerHTML = '';
+
+          if (data.length > 0) {
+            data.forEach(gif => {
+              const listItem = document.createElement('li');
+              listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+              gifList.appendChild(listItem);
+            });
+          } else {
+            gifList.innerHTML = '<li>No matching GIFs found.</li>';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching GIF list:', error);
     });
 }
-function searchByAttribute() {
+    function searchByAttribute() {
       const searchByAttributeInput = document.getElementById('searchByAttributeInput');
       const attributeSearchTerm = searchByAttributeInput.value;
 
@@ -350,161 +383,159 @@ function searchByAttribute() {
         });
     }
     function updateGifName() {
-  const gifIdInputUpdate = document.getElementById('gifIdInputMod');
-  const updateNameInput = document.getElementById('updateNameInput');
-  const gifId = gifIdInputUpdate.value;
-  const newName = updateNameInput.value;
+      const gifIdInputUpdate = document.getElementById('gifIdInputMod');
+      const updateNameInput = document.getElementById('updateNameInput');
+      const gifId = gifIdInputUpdate.value;
+      const newName = updateNameInput.value;
 
-  // Make sure both GIF ID and new name are provided
-  if (!gifId || !newName) {
-    alert('Please enter both GIF ID and new name.');
-    return;
-  }
-
-  fetch(`/update-gif/${gifId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ newName }),
-  })
-    .then(response => {
-      if (response.ok) {
-        console.log('GIF name updated successfully.');
-        // You can add additional logic here, such as updating the UI.
-      } else {
-        console.error('Error updating GIF name:', response.status);
+      if (!gifId || !newName) {
+        alert('Please enter both GIF ID and new name.');
+        return;
       }
-    })
-    .catch(error => {
-      console.error('Error updating GIF name:', error);
-    });
-}  
+
+      fetch(`/update-gif/${gifId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newName }),
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log('GIF name updated successfully.');
+            alert('GIF name updated successfully.');
+          } else {
+            console.error('Error updating GIF name:', response.status);
+            alert('Error updating GIF name');
+          }
+        })
+        .catch(error => {
+          console.error('Error updating GIF name:', error);
+          alert('Error updating GIF name');
+        });
+    }  
   
-function deleteGif() {
-  const gifIdInputDel = document.getElementById('gifIdInputMod');
-  const gifId = gifIdInputDel.value;
+    function deleteGif() {
+      const gifIdInputDel = document.getElementById('gifIdInputMod');
+      const gifId = gifIdInputDel.value;
 
-  // Перевірте, чи введено ідентифікатор GIF
-  if (!gifId) {
-    alert('Please enter GIF ID to delete.');
-    return;
-  }
-
-  fetch(`/gif/${gifId}`, {
-    method: 'DELETE',
-  })
-    .then(response => {
-      if (response.ok) {
-        console.log('GIF deleted successfully.');
-        // Можна додати додаткову логіку тут, наприклад, оновлення UI.
-      } else if (response.status === 404) {
-        console.error('GIF not found.');
-      } else {
-        console.error('Error deleting GIF:', response.status);
+      if (!gifId) {
+        alert('Please enter GIF ID to delete.');
+        return;
       }
-    })
-    .catch(error => {
-      console.error('Error deleting GIF:', error);
-    });
-}
 
-
-
-function authenticateAndShowTab(tabName) {
-  const login = prompt('Enter login:');
-  const password = prompt('Enter password:');
-
-  // Виклик серверного маршруту для перевірки аутентифікації
-  fetch('/check-auth', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ login, password }),
-  })
-    .then(response => {
-      if (response.ok) {
-        isAuthenticated = true;
-        localStorage.setItem('isAuthenticated', 'true');
-      } else {
-        isAuthenticated = false;
-        alert('Invalid login or password. Please try again.');
-      }
-    })
-    .catch(error => {
-      console.error('Error checking authentication:', error);
-    });
-}
-
-    let activeTab = 'main'; // Збереження активної вкладки
-
-  function showTab(tabName) {
-  // Зняття класу "active-tab" з поточної активної вкладки
-  const currentActiveButton = document.querySelector(`.tab-button[data-tab="${activeTab}"]`);
-  currentActiveButton.classList.remove('active-tab');
-
-  // Зняття класу "active-tab" з поточного активного вмісту
-  const currentActiveTabContent = document.getElementById(`${activeTab}TabContent`);
-  if (currentActiveTabContent) {
-    currentActiveTabContent.style.display = 'none';
-  }
-
-  // Встановлення класу "active-tab" для нової активної вкладки
-  const newActiveButton = document.querySelector(`.tab-button[data-tab="${tabName}"]`);
-  newActiveButton.classList.add('active-tab');
-
-  // Оновлення активної вкладки
-  activeTab = tabName;
-  searchByNameTabContent.style.display = 'none';
-  searchByAttributeTabContent.style.display = 'none';
-  const uploadForm = document.getElementById('uploadForm');
-  const updateNameForm = document.getElementById('updateNameForm');
-  const ViewAndDownloadGIFForm = document.getElementById(`ViewAndDownloadGIFForm`);
-  const savedAuthStatus = localStorage.getItem('isAuthenticated');
-  isAuthenticated = savedAuthStatus === 'true';
-  uploadForm.style.display = 'none';
-  updateNameForm.style.display = 'none';
-  ViewAndDownloadGIFForm.style.display = 'block';
-  // Перемикання вкладок
-  if (tabName === 'main') {
-    displayGifList();
-  } else if (tabName === 'comaruFamily') {
-    displayComaruGifList();
-  } else if (tabName === 'pig') {
-    displayPigGifList();
-  } else if (tabName === 'others') {
-    displayOthersGifList();
-  } else if (tabName === 'arctic_vixen') {
-    displayArctic_VixenGifList();
-  } else if (tabName === 'searchByName') {
-    gifList.innerHTML = ''; // Очистити список
-    const searchTabContent = document.getElementById(`searchByNameTabContent`);
-      searchTabContent.style.display = 'block';
-  }
-  else if (tabName === 'searchByAttributes') {
-    gifList.innerHTML = ''; // Очистити список
-    const searchTabContent = document.getElementById(`searchByAttributeTabContent`);
-      searchTabContent.style.display = 'block';
-
-  }
-  else if (tabName === 'modGif') {
-    if (!isAuthenticated){
-      authenticateAndShowTab('modGif');
-      return;
+      fetch(`/gif/${gifId}`, {
+        method: 'DELETE',
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log('GIF deleted successfully.');
+            alert('GIF deleted successfully.');
+          } else if (response.status === 404) {
+            console.error('GIF not found.');
+            alert('GIF not found.');
+          } else {
+            console.error('Error deleting GIF:', response.status);
+            alert('Error deleting GIF.');
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting GIF:', error);
+          alert('Error deleting GIF.');
+        });
     }
-    uploadForm.style.display = 'block';
-    updateNameForm.style.display = 'block';
-    const ViewAndDownloadGIFForm = document.getElementById('ViewAndDownloadGIFForm');
-    ViewAndDownloadGIFForm.style.display = 'none';
-    // Відобразити список GIF
-    const allGifContainer = document.getElementById('allGifContainer');
-    allGifContainer.style.display = 'block';
-    displayGifList();
-  }
 
-}
-document.getElementById('updateNameButton').addEventListener('click', updateGifName);
+    function authenticateAndShowTab(tabName) {
+      const login = prompt('Enter login:');
+      const password = prompt('Enter password:');
+
+      fetch('/check-auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ login, password }),
+      })
+        .then(response => {
+          if (response.ok) {
+            isAuthenticated = true;
+            sessionStorage.setItem('isAuthenticated', 'true');
+            showTab('modGif');
+          } else {
+            isAuthenticated = false;
+            alert('Invalid login or password. Please try again.');
+          }
+        })
+        .catch(error => {
+          console.error('Error checking authentication:', error);
+        });
+    }
+
+    function showTab(tabName) {
+      // Зняття класу "active-tab" з поточної активної вкладки
+      const currentActiveButton = document.querySelector(`.tab-button[data-tab="${activeTab}"]`);
+      currentActiveButton.classList.remove('active-tab');
+
+      // Зняття класу "active-tab" з поточного активного вмісту
+      const currentActiveTabContent = document.getElementById(`${activeTab}TabContent`);
+      if (currentActiveTabContent) {
+        currentActiveTabContent.style.display = 'none';
+      }
+
+      // Встановлення класу "active-tab" для нової активної вкладки
+      const newActiveButton = document.querySelector(`.tab-button[data-tab="${tabName}"]`);
+      newActiveButton.classList.add('active-tab');
+
+      activeTab = tabName;// Оновлення активної вкладки
+      searchByNameTabContent.style.display = 'none';
+      searchByAttributeTabContent.style.display = 'none';
+      zoomControls.style.display='block';
+      const uploadForm = document.getElementById('uploadForm');
+      const updateNameForm = document.getElementById('updateNameForm');
+      const ViewAndDownloadGIFForm = document.getElementById(`ViewAndDownloadGIFForm`);
+      const savedAuthStatus = sessionStorage.getItem('isAuthenticated');
+      isAuthenticated = savedAuthStatus === 'true';
+      uploadForm.style.display = 'none';
+      updateNameForm.style.display = 'none';
+      ViewAndDownloadGIFForm.style.display = 'block';
+
+      // Перемикання вкладок
+      if (tabName === 'main') {
+        displayGifList();
+      } else if (tabName === 'comaruFamily') {
+        displayComaruGifList();
+      } else if (tabName === 'pig') {
+        displayPigGifList();
+      } else if (tabName === 'others') {
+        displayOthersGifList();
+      } else if (tabName === 'arctic_vixen') {
+        displayArctic_VixenGifList();
+      } else if (tabName === 'searchByName') {
+        gifList.innerHTML = ''; // Очистити список
+        const searchTabContent = document.getElementById(`searchByNameTabContent`);
+          searchTabContent.style.display = 'block';
+      }
+      else if (tabName === 'searchByAttributes') {
+        gifList.innerHTML = ''; // Очистити список
+        const searchTabContent = document.getElementById(`searchByAttributeTabContent`);
+          searchTabContent.style.display = 'block';
+      }
+      else if (tabName === 'modGif') {
+        if (!isAuthenticated){
+          authenticateAndShowTab('modGif');
+          return;
+        }
+        zoomControls.style.display='none';
+        uploadForm.style.display = 'block';
+        updateNameForm.style.display = 'block';
+        const ViewAndDownloadGIFForm = document.getElementById('ViewAndDownloadGIFForm');
+        ViewAndDownloadGIFForm.style.display = 'none';
+        const allGifContainer = document.getElementById('allGifContainer');
+        allGifContainer.style.display = 'block';
+        displayGifList();
+      }
+    }
+    document.getElementById('updateNameButton').addEventListener('click', updateGifName);
 
 
   </script>
