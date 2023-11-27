@@ -60,61 +60,7 @@
   </div>
 
   <script>
-    function displayGifList() {
-      const gifList = document.getElementById('gifList');
-
-      fetch('/gif-list')
-        .then(response => response.json())
-        .then(data => {
-          if (data.length > 0) {
-            data.forEach(gif => {
-              const listItem = document.createElement('li');
-              listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
-              gifList.appendChild(listItem);
-            });
-          } else {
-            gifList.innerHTML = '<li>No GIFs available.</li>';
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching GIF list:', error);
-        });
-    }
-
-    displayGifList();// Виклик функції при завантаженні сторінки для відображення відповідного списку гіфок
-
-    function updateGifName() {
-      const gifIdInputUpdate = document.getElementById('gifIdInput');
-      const updateNameInput = document.getElementById('updateNameInput');
-      const gifId = gifIdInputUpdate.value;
-      const newName = updateNameInput.value;
-
-      if (!gifId || !newName) {
-        alert('Please enter both GIF ID and new name.');
-        return;
-      }
-
-      fetch(`/update-gif/${gifId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ newName }),
-      })
-        .then(response => {
-          if (response.ok) {
-            console.log('GIF name updated successfully.');
-            alert('GIF name updated successfully.');
-          } else {
-            console.error('Error updating GIF name:', response.status);
-            alert('Error updating GIF name');
-          }
-        })
-        .catch(error => {
-          console.error('Error updating GIF name:', error);
-          alert('Error updating GIF name');
-        });
-    }
+    displayGifList();// Виклик функції при завантаженні сторінки для відображення списку всіх гіфок
 
     function deleteGif() {
       const gifIdInputDel = document.getElementById('gifIdInput');
@@ -143,6 +89,39 @@
         .catch(error => {
           console.error('Error deleting GIF:', error);
           alert('Error deleting GIF.');
+        });
+    }
+
+    function updateGifName() {
+      const gifIdInputUpdate = document.getElementById('gifIdInput');
+      const updateNameInput = document.getElementById('updateNameInput');
+      const gifId = gifIdInputUpdate.value;
+      const newName = updateNameInput.value;
+
+      if (!gifId || !newName) {
+        alert('Please enter both GIF ID and new name.');
+        return;
+      }
+
+      fetch(`/edit-name/${gifId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newName }),
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log('GIF name updated successfully.');
+            alert('GIF name updated successfully.');
+          } else {
+            console.error('Error updating GIF name:', response.status);
+            alert('Error updating GIF name');
+          }
+        })
+        .catch(error => {
+          console.error('Error updating GIF name:', error);
+          alert('Error updating GIF name');
         });
     }
 

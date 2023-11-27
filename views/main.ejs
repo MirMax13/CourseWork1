@@ -8,6 +8,7 @@
   <!-- Підключення стилів -->
   <link rel="stylesheet" type="text/css" href="/public/styles.css">
   <!-- Підключення скрипту -->
+  <!--<link rel="shortcut icon"type="image/ico"href="/fav/favicon.ico"/>-->
   <script src="/public/script.js"></script>
 </head>
 <body>
@@ -51,26 +52,6 @@
   </div>
 
   <script>
-    function displayGifList() {
-      const gifList = document.getElementById('gifList');
-
-      fetch('/gif-list')
-        .then(response => response.json())
-        .then(data => {
-          if (data.length > 0) {
-            data.forEach(gif => {
-              const listItem = document.createElement('li');
-              listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
-              gifList.appendChild(listItem);
-            });
-          } else {
-            gifList.innerHTML = '<li>No GIFs available.</li>';
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching GIF list:', error);
-        });
-    }
     displayGifList();// Виклик функції при завантаженні сторінки для відображення відповідного списку гіфок
   </script>
 </body>

@@ -1,5 +1,80 @@
 let isAuthenticated = false;
 
+function authenticateAndShowTab(tabName) {
+  const login = prompt('Enter login:');
+  const password = prompt('Enter password:');
+
+  fetch('/check-auth', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ login, password }),
+  })
+    .then(response => {
+      if (response.ok) {
+        isAuthenticated = true;
+        sessionStorage.setItem('isAuthenticated', 'true');
+        showTab('modGif');
+      } else {
+        isAuthenticated = false;
+        alert('Invalid login or password. Please try again.');
+      }
+    })
+    .catch(error => {
+      console.error('Error checking authentication:', error);
+    });
+}
+
+function showTab(tabName) {
+  const savedAuthStatus = sessionStorage.getItem('isAuthenticated');
+  isAuthenticated = savedAuthStatus === 'true';
+
+  // Перемикання вкладок
+  if (tabName === 'main') {
+    window.location.href = '/'; 
+  } else if (tabName === 'comaruFamily') {
+    window.location.href = '/Comaru'; 
+  } else if (tabName === 'pig') {
+    window.location.href = '/pig'; 
+  } else if (tabName === 'others') {
+    window.location.href = '/others'; 
+  } else if (tabName === 'arctic_vixen') {
+    window.location.href = '/arctic-vixen'; 
+  } else if (tabName === 'searchByName') {
+    window.location.href = '/search-by-name'; 
+  }
+  else if (tabName === 'searchByAttributes') {
+    window.location.href = '/search-by-attributes'; 
+  }
+  else if (tabName === 'modGif') {
+    if (!isAuthenticated){
+      authenticateAndShowTab('modGif');
+      return;
+    }
+    window.location.href = '/Modify-Gifs'; 
+  }
+}
+
+function applyScale() {
+  gifImage.style.transform = `scale(${currentScale})`;// Застосування масштабу до зображення
+}
+
+function zoomIn() {
+  currentScale += 0.1; // Збільшення масштабу на 10%
+  applyScale();
+}
+
+function zoomOut() {
+  currentScale -= 0.1; // Зменшення масштабу на 10%
+  applyScale();
+}
+
+function resetZoom() {
+  currentScale = 1; // Повернення до звичайного масштабу
+  applyScale();
+}
+
 function openGif() {
   const gifIdInput = document.getElementById('gifIdInput');
   const gifId = gifIdInput.value;
@@ -46,6 +121,13 @@ function openGif() {
         console.error('Error fetching GIF name:', error);
       });
 }
+
+function showGif(gifId) {
+  const gifIdInput = document.getElementById('gifIdInput');
+  gifIdInput.value = gifId;
+  openGif();
+}
+
 function downloadGif() {
   const gifIdInput = document.getElementById('gifIdInput');
   const gifId = gifIdInput.value;
@@ -77,83 +159,24 @@ function downloadGif() {
       console.error('Error fetching GIF:', error);
     });
 }
-function zoomIn() {
-  currentScale += 0.1; // Збільшення масштабу на 10%
-  applyScale();
-}
 
-function zoomOut() {
-  currentScale -= 0.1; // Зменшення масштабу на 10%
-  applyScale();
-}
+function displayGifList() {
+  const gifList = document.getElementById('gifList');
 
-function resetZoom() {
-  currentScale = 1; // Повернення до звичайного масштабу
-  applyScale();
-}
-
-function applyScale() {
-  gifImage.style.transform = `scale(${currentScale})`;// Застосування масштабу до зображення
-}
-function showGif(gifId) {
-  const gifIdInput = document.getElementById('gifIdInput');
-  gifIdInput.value = gifId;
-  openGif();
-}
-
-function authenticateAndShowTab(tabName) {
-  const login = prompt('Enter login:');
-  const password = prompt('Enter password:');
-
-  fetch('/check-auth', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ login, password }),
-  })
-    .then(response => {
-      if (response.ok) {
-        isAuthenticated = true;
-        sessionStorage.setItem('isAuthenticated', 'true');
-        showTab('modGif');
+  fetch('/gif-list')
+    .then(response => response.json())
+    .then(data => {
+      if (data.length > 0) {
+        data.forEach(gif => {
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+          gifList.appendChild(listItem);
+        });
       } else {
-        isAuthenticated = false;
-        alert('Invalid login or password. Please try again.');
+        gifList.innerHTML = '<li>No GIFs available.</li>';
       }
     })
     .catch(error => {
-      console.error('Error checking authentication:', error);
+      console.error('Error fetching GIF list:', error);
     });
-}
-
-
-function showTab(tabName) {
-  const savedAuthStatus = sessionStorage.getItem('isAuthenticated');
-  isAuthenticated = savedAuthStatus === 'true';
-
-  // Перемикання вкладок
-  if (tabName === 'main') {
-    window.location.href = '/'; 
-  } else if (tabName === 'comaruFamily') {
-    window.location.href = '/Comaru'; 
-  } else if (tabName === 'pig') {
-    window.location.href = '/pig'; 
-  } else if (tabName === 'others') {
-    window.location.href = '/others'; 
-  } else if (tabName === 'arctic_vixen') {
-    window.location.href = '/arctic-vixen'; 
-  } else if (tabName === 'searchByName') {
-    window.location.href = '/search-by-name'; 
-  }
-  else if (tabName === 'searchByAttributes') {
-    window.location.href = '/search-by-attributes'; 
-  }
-  else if (tabName === 'modGif') {
-    if (!isAuthenticated){
-      authenticateAndShowTab('modGif');
-      return;
-    }
-    window.location.href = '/Modify-Gifs'; 
-  }
 }
