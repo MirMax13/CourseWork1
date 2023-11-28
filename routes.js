@@ -2,9 +2,14 @@ const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
 const bodyParser = require('body-parser');
-
+const path = require('path');
 
 const GifModel = require('./gifModel');
+
+const uploadsPath = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath);
+}
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
@@ -263,6 +268,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       res.status(400).send('Error: File was not uploaded.');
     }
   } catch (error) {
+    fs.unlinkSync(req.file.path);
     res.status(500).send('Error saving file to the database.');
   }
 });
