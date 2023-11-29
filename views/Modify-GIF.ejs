@@ -131,7 +131,7 @@
       const gifId = gifIdInputEdit.value;
       const newAttributes = editAttributesInput.value.split(',').map(attribute => attribute.trim());
 
-      if (!gifId || newAttributes.length < 2) {
+      if (!gifId || newAttributes.some(attribute => attribute.length < 2)) {
         alert('Please enter both GIF ID and new attributes (more than 1 letter).');
         return;
       }
