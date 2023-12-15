@@ -227,7 +227,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       // Видалити тимчасовий файл
       fs.unlinkSync(req.file.path);
 
-      res.send('File successfully uploaded and saved to the database.');
+      res.status(201).send('File successfully uploaded and saved to the database.');
     } else {
       res.status(400).send('Error: File was not uploaded.');
     }
