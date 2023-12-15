@@ -100,43 +100,7 @@ router.get('/gif-list', async (req, res) => {
   }
 });
   
-router.get('/Comaru-gif-list', async (req, res) => {
-  try {
-    const ComaruGifs = await GifModel.find({ attributes: 'Comaru' }, 'filename');
-    res.json(ComaruGifs);
-  } catch (error) {
-    res.status(500).send('Помилка отримання списку "Comaru" GIFs');
-  }
-});
-  
-router.get('/Pig-gif-list', async (req, res) => {
-  try {
-    const PigGifs = await GifModel.find({ attributes: 'pig' }, 'filename');
-    res.json(PigGifs);
-  } catch (error) {
-    res.status(500).send('Помилка отримання списку "Pig" GIFs');
-  }
-});
-  
-router.get('/Arctic-Vixen-gif-list', async (req, res) => {
-  try {
-    const Arctic_VixenGifs = await GifModel.find({ attributes: 'arctic_vixen' }, 'filename');
-    res.json(Arctic_VixenGifs);
-  } catch (error) {
-    res.status(500).send('Помилка отримання списку "arctic_vixen" GIFs');
-  }
-});
-  
-router.get('/Others-gif-list', async (req, res) => {
-  try {
-    const OthersGifs = await GifModel.find({ attributes: 'others' }, 'filename');
-    res.json(OthersGifs);
-  } catch (error) {
-    res.status(500).send('Помилка отримання списку "others" GIFs');
-  }
-});
-  
-router.get('/search-by-name/:name', async (req, res) => {
+router.get('/gif-list-by-name/:name', async (req, res) => {
   try {
     const searchTerm = req.params.name;
     const gifs = await GifModel.find({ filename: { $regex: searchTerm, $options: 'i' } }, 'filename');
@@ -146,7 +110,7 @@ router.get('/search-by-name/:name', async (req, res) => {
   }
 });
   
-router.get('/search-by-attribute/:attribute', async (req, res) => {
+router.get('/gif-list-by-attribute/:attribute', async (req, res) => {
   const attribute = req.params.attribute;
   try {
     const gifs = await GifModel.find({ attributes: attribute }).exec();

@@ -52,8 +52,8 @@
   <script>
     function displayComaruGifList() {
       const gifList = document.getElementById('comaruGifList');
-
-      fetch('/Comaru-gif-list')
+      const attribute = "Comaru";
+      fetch(`/gif-list-by-attribute/${attribute}`)
       .then(response => response.json())
       .then(data => {
         if (data.length > 0) {

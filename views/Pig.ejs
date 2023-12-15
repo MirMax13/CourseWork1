@@ -53,8 +53,8 @@
   <script>
     function displayPigGifList() {
       const gifList = document.getElementById('pigGifList');
-
-      fetch('/Pig-gif-list')
+      const attribute = "pig";
+      fetch(`/gif-list-by-attribute/${attribute}`)
       .then(response => response.json())
       .then(data => {
         if (data.length > 0) {

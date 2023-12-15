@@ -60,7 +60,7 @@
       const searchByAttributeInput = document.getElementById('searchByAttributeInput');
       const attributeSearchTerm = searchByAttributeInput.value;
 
-      fetch(`/search-by-attribute/${attributeSearchTerm}`)
+      fetch(`/gif-list-by-attribute/${attributeSearchTerm}`)
         .then(response => response.json())
         .then(data => {
           const gifList = document.getElementById('gifList');

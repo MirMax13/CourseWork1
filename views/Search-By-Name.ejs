@@ -60,7 +60,7 @@
       const searchInput = document.getElementById('searchByNameInput');
       const searchTerm = searchInput.value;
 
-      fetch(`/search-by-name/${searchTerm}`)
+      fetch(`/gif-list-by-name/${searchTerm}`)
         .then(response => response.json())
         .then(data => {
           const gifList = document.getElementById('gifList');

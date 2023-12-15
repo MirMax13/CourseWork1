@@ -52,8 +52,8 @@
   <script>
     function displayArctic_VixenGifList() {
       const gifList = document.getElementById('Arctic_vixenGifList');
-
-      fetch('/Arctic-Vixen-gif-list')
+      const attribute = "arctic_vixen";
+      fetch(`/gif-list-by-attribute/${attribute}`)
       .then(response => response.json())
       .then(data => {
         if (data.length > 0) {
