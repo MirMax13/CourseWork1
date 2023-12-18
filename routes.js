@@ -127,6 +127,9 @@ router.get('/gif-list-by-attribute/:attribute', async (req, res) => {
   
 router.put('/edit-name/:id', async (req, res) => {
   try {
+    if (!req.session.isAuthenticated) {
+      return res.status(401).send('Authentication required');
+    }
     const gifId = req.params.id;
     const newName = req.body.newName;
 
@@ -153,6 +156,9 @@ router.put('/edit-name/:id', async (req, res) => {
   
 router.put('/edit-attributes/:id', async (req, res) => {
   try {
+    if (!req.session.isAuthenticated) {
+      return res.status(401).send('Authentication required');
+    }
     const gifId = req.params.id;
     const { newAttributes } = req.body;
 
@@ -181,6 +187,9 @@ router.put('/edit-attributes/:id', async (req, res) => {
   
 router.delete('/gif/:id', async (req, res) => {
   try {
+    if (!req.session.isAuthenticated) {
+      return res.status(401).send('Authentication required');
+    }
     const gifId = req.params.id;
     const deletedGif = await GifModel.findByIdAndDelete(gifId);
 
@@ -197,6 +206,9 @@ router.delete('/gif/:id', async (req, res) => {
   
 router.post('/upload', upload.single('file'), async (req, res) => {
   try {
+    if (!req.session.isAuthenticated) {
+      return res.status(401).send('Authentication required');
+    }
     if (req.file) {
       const { originalname, buffer, mimetype } = req.file;
       const defaultAttribute = req.body.defaultAttribute || 'all';
