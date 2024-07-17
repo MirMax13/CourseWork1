@@ -34,7 +34,7 @@ function showTab(tabName) {
   if (tabName === 'main') {
     window.location.href = '/'; 
   } else if (tabName === 'comaruFamily') {
-    window.location.href = '/Comaru'; 
+    window.location.href = '/comaru'; 
   } else if (tabName === 'pig') {
     window.location.href = '/pig'; 
   } else if (tabName === 'others') {
@@ -52,7 +52,7 @@ function showTab(tabName) {
       authenticateAndShowTab('modGif');
       return;
     }
-    window.location.href = '/Modify-Gifs'; 
+    window.location.href = '/modify-gifs'; 
   }
 }
 

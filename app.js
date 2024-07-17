@@ -55,11 +55,11 @@ app.get('/', (req, res) => {
   res.render('main');
 });
 
-app.get('/Comaru', (req, res) => {
+app.get('/comaru', (req, res) => {
   res.render('Comaru');
 });
 
-app.get('/Pig', (req, res) => {
+app.get('/pig', (req, res) => {
   res.render('Pig');
 });
 
@@ -67,19 +67,19 @@ app.get('/arctic-vixen', (req, res) => {
   res.render('Arctic-Vixen');
 });
 
-app.get('/Others', (req, res) => {
+app.get('/others', (req, res) => {
   res.render('Others');
 });
 
-app.get('/search-By-Name', (req, res) => {
+app.get('/search-by-name', (req, res) => {
   res.render('Search-by-name');
 });
 
-app.get('/search-By-Attributes', (req, res) => {
+app.get('/search-by-attributes', (req, res) => {
   res.render('Search-by-attributes');
 });
 
-app.get('/Modify-Gifs', (req, res) => {
+app.get('/modify-gifs', (req, res) => {
   if (!req.session.isAuthenticated) {
     res.redirect('/'); // Перенаправлення на головну сторінку
     return;
