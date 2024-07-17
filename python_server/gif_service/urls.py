@@ -5,12 +5,13 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("Comaru", views.Comaru, name="Comaru"),
-    path("Pig", views.Pig, name="Pig"),
-    path("Arctic-Vixen", views.ArcticVixen, name="Arctic-Vixen"),
-    path("Others", views.Others, name="Others"),
-    path("Search-By-Name", views.SearchByName, name="Search-By-Name"),
+    path("pig", views.Pig, name="Pig"),
+    path("arctic-vixen", views.ArcticVixen, name="Arctic-Vixen"),
+    path("others", views.Others, name="Others"),
+    path("search-by-name", views.SearchByName, name="Search-By-Name"),
     #TODO:
     # path("Search-By-Name/<str:name>", views.SearchByName, name="Search-By-Name"),
-    path("Search-By-Attributes", views.SearchByAttribute, name="Search-By-Attributes"),
+    #TODO: Fix path in express.js, bc one in upper case letter (Comaru but  other lowercase)
+    path("search-by-attributes", views.SearchByAttribute, name="Search-By-Attributes"),
     path("Modify-Gif", views.ModifyGif, name="Modify-Gif"),
 ]

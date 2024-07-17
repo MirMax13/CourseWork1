@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path("gif-service/", include("gif_service.urls")),
+    path("", include("gif_service.urls")),
     path("admin/", admin.site.urls),
 ]
