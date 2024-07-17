@@ -1,26 +1,28 @@
 from django.http import HttpResponse
-
+from django.template import loader
+from .models import Gif
+from django.shortcuts import render
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the gif service index.")
+    return render(request, "main.ejs")
 
 def Comaru(request):
-    return HttpResponse("Comaru")
+    return render(request, "Comaru.ejs")
 
 def Pig(request):
-    return HttpResponse("Pig")
+    return render(request, "Pig.ejs")
 
 def ArcticVixen(request):
-    return HttpResponse("ArcticVixen")
+    return render(request, "Arctic-Vixen.ejs")
 
 def Others(request):
-    return HttpResponse("Others")
+    return render(request, "Others.ejs")
 
-def SearchByName(request, name):
-    return HttpResponse(f"SearchByName: {name}")
+def SearchByName(request):
+    return render(request, "Search-By-Name.ejs")
 
-def SearchByAttribute(request, attribute):
-    return HttpResponse(f"SearchByAttribute: {attribute}")
+def SearchByAttribute(request):
+    return render(request, "Search-By-Attributes.ejs")
 
-def ModifyGif(request, name):
-    return HttpResponse(f"ModifyGif: {name}")
+def ModifyGif(request):
+    return render(request, "Modify-Gif.ejs")
