@@ -1,2 +1,4 @@
 node_modules/
-package-lock.json
+.env
+__pycache__
+python_server/venv/
