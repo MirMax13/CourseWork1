@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const GifModel = require('./gifModel');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 const uploadsPath = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsPath)) {
@@ -253,7 +254,7 @@ router.post('/check-auth', (req, res) => {
   const { login, password } = req.body;
 
   // Порівняння логіну і паролю з даними адміна
-  if (login === 'Admin' && password === 'Steo9765') {
+  if (login === process.env.ADMIN_LOGIN && password === process.env.ADMIN_PASSWORD) {
     req.session.isAuthenticated = true;
     res.status(200).send('Authentication successful');
   } else {

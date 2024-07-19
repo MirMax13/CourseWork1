@@ -1,9 +1,10 @@
 {
   "name": "coursework",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "",
   "main": "app.js",
   "scripts": {
+    "dev": "nodemon app.js",
     "test": "echo \"Smth\" && exit 1"
   },
   "keywords": [],
@@ -17,7 +18,9 @@
     "express-session": "^1.17.3",
     "mongodb": "^6.1.0",
     "mongoose": "^7.6.1",
-    "multer": "^1.4.5-lts.1",
-    "nodemon": "^3.0.1"
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }
