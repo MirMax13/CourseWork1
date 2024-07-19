@@ -11,7 +11,6 @@ urlpatterns = [
     path("search-by-name", views.SearchByName, name="Search-By-Name"),
     #TODO:
     # path("Search-By-Name/<str:name>", views.SearchByName, name="Search-By-Name"),
-    #TODO: Fix path in express.js, bc one in upper case letter (Comaru but  other lowercase)
     path("search-by-attributes", views.SearchByAttribute, name="Search-By-Attributes"),
     path("Modify-Gif", views.ModifyGif, name="Modify-Gif"),
 ]
