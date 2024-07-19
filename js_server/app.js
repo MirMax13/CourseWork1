@@ -4,6 +4,9 @@ const session = require('express-session');
 const crypto = require('crypto');
 const path = require('path');
 const routes = require('./routes');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express();
 const port = 3000;
@@ -13,7 +16,8 @@ const secretKey = crypto.randomBytes(32).toString('hex');
 console.log(secretKey);
 
 // Підключення до бази даних MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/mydatabase', {
+const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mydatabase';
+mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
