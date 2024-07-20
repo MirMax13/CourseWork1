@@ -1,0 +1,4 @@
+js_server/node_modules/
+python_server/venv
+**/__pycache__
+

@@ -14,7 +14,7 @@ COPY js_server/package*.json ./js_server/
 RUN cd js_server && npm install
 
 # Копіювання всіх файлів js_server у відповідну папку
-COPY js_server /app/js_server
+COPY js_server ./js_server/
 
 # Копіювання папки views безпосередньо у папку views всередині app
 COPY views/ ./views/

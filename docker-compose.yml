@@ -10,7 +10,10 @@ services:
     depends_on:
       - mongo
     volumes:
-      - .:/app
+      - ./js_server:/app/js_server:delegated
+      - ./views:/app/views:delegated
+      - ./public:/app/public:delegated
+      - /app/js_server/node_modules
     environment:
       - NODE_ENV=development
       - MONGODB_URI=mongodb://mongo:27017/mydatabase
@@ -23,6 +26,11 @@ services:
       - "8000:8000"
     depends_on:
       - postgres
+    volumes:
+      - ./python_server:/app/python_server:delegated
+      - ./views:/app/views:delegated
+      - ./public:/app/public:delegated
+      - /app/python_server/venv
     env_file:
       - .env
     environment:
