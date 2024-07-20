@@ -82,10 +82,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "gif_db",
-        "USER": "postgres",
-        "PASSWORD": env('DB_PASSWORD'),
-        "HOST": "127.0.0.1",
+        "NAME": env('POSTGRES_DB'),
+        "USER": env('POSTGRES_USER'),
+        "PASSWORD": env('POSTGRES_PASSWORD'),
+        "HOST": env('DATABASE_HOST', default='127.0.0.1'),
         "PORT": "5432",
     }
 }
