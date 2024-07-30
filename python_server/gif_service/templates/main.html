@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All GIF List</title>
+  <!-- Підключення стилів -->
+  <link rel="stylesheet" type="text/css" href="/public/styles.css">
+  <!-- Підключення скрипту -->
+  <!--<link rel="shortcut icon"type="image/ico"href="/fav/favicon.ico"/>-->
+  <script src="/public/script.js"></script>
+</head>
+<body>
+  <div id="tabs">
+    <button class="tab-button active-tab" data-tab="main" onclick="showTab('main')">Main</button>
+    <button class="tab-button" data-tab="comaruFamily" onclick="showTab('comaruFamily')">Comaru Family</button>
+    <button class="tab-button" data-tab="pig" onclick="showTab('pig')">Pig</button>
+    <button class="tab-button" data-tab="arctic_vixen" onclick="showTab('arctic_vixen')">Arctic Vixen</button>
+    <button class="tab-button" data-tab="others" onclick="showTab('others')">Others</button>
+    
+    <button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
+    <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
+    <button class="tab-button" data-tab="modGif" onclick="showTab('modGif')">Modify Gifs</button>
+  </div>
+
+  <div id="ViewAndDownloadGIFForm" style="display: block;">
+    <h2>View and Download GIF</h2>
+    <input type="text" id="gifIdInput" placeholder="GIF ID">
+    <input type="text" id="downloadFileNameInput" placeholder="Enter file name (in Latin)">
+    <button onclick="openGif()">Open GIF</button>
+    <button onclick="downloadGif()">Download GIF</button>
+        
+    <video id="" controls class="styled-video" style="display: none;"></video> <!-- <video> для відображення GIF з класом "styled-video" -->
+    <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
+    <div id="gifAttributes"></div>
+    <div id="gifName"></div>
+  </div>
+
+  <div id="zoomControls">
+    <button onclick="zoomIn()">Zoom In</button>
+    <button onclick="zoomOut()">Zoom Out</button>
+    <button onclick="resetZoom()">Reset Zoom</button>
+  </div>
+    
+  <!-- Блок для відображення списку гіфок -->
+  <div class="gif-container" id="allGifContainer" style="display: block;">
+    <h2>List of GIFs</h2>
+    <div class="gif-columns">
+      <ul id="gifList"></ul>
+    </div>
+  </div>
+
+  <script>
+    displayGifList();// Виклик функції при завантаженні сторінки для відображення відповідного списку гіфок
+  </script>
+</body>
+</html>
+

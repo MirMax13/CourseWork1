@@ -9,28 +9,28 @@ context = {
 }
 #TODO: Add the 404 error page (Express and Django)
 def index(request):
-    return render(request, "main.ejs", context)
+    return render(request, "main.html", context)
 
 def Comaru(request):
-    return render(request, "Comaru.ejs")
+    return render(request, "Comaru.html")
 
 def Pig(request):
-    return render(request, "Pig.ejs")
+    return render(request, "Pig.html")
 
 def ArcticVixen(request):
-    return render(request, "Arctic-Vixen.ejs")
+    return render(request, "Arctic-Vixen.html")
 
 def Others(request):
-    return render(request, "Others.ejs")
+    return render(request, "Others.html")
 
 def SearchByName(request):
-    return render(request, "Search-By-Name.ejs")
+    return render(request, "Search-By-Name.html")
 
 def SearchByAttribute(request):
-    return render(request, "Search-By-Attributes.ejs")
+    return render(request, "Search-By-Attributes.html")
 
 def ModifyGif(request):
-    return render(request, "Modify-Gif.ejs", context)
+    return render(request, "Modify-Gif.html", context)
 
 def UploadGif(request): #TODO: Maybe upgrade
     if request.method == "POST":
@@ -45,4 +45,5 @@ def UploadGif(request): #TODO: Maybe upgrade
         except Exception as e:
             return HttpResponse(str(e), status=500)
         
-
+def error_404_view(request, exception):
+    return render(request, "404.html", status=404)

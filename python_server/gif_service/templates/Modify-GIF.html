@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modify GIFs</title>
+  <!-- Підключення стилів -->
+  <link rel="stylesheet" type="text/css" href="/public/styles.css">
+  <!-- Підключення скрипту -->
+  <script src="/public/script.js"></script>
+</head>
+<body>
+  <div id="tabs">
+    <button class="tab-button" data-tab="main" onclick="showTab('main')">Main</button>
+    <button class="tab-button" data-tab="comaruFamily" onclick="showTab('comaruFamily')">Comaru Family</button>
+    <button class="tab-button" data-tab="pig" onclick="showTab('pig')">Pig</button>
+    <button class="tab-button" data-tab="arctic_vixen" onclick="showTab('arctic_vixen')">Arctic Vixen</button>
+    <button class="tab-button" data-tab="others" onclick="showTab('others')">Others</button>
+    
+    <button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
+    <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
+    <button class="tab-button active-tab" data-tab="modGif" onclick="showTab('modGif')">Modify Gifs</button>
+  </div>
+
+  <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" style="display: block;">
+    <h2>File Upload</h2>
+    <input type="file" name="file">
+    <input type="text" name="attributes" id="attributesInput" placeholder="Enter attributes (comma-separated)">
+    <input type="hidden" name="defaultAttribute" value="all"> <!-- Прихований ввід для атрибута за замовчуванням -->
+    <input type="submit" value="Upload File">
+  </form>
+
+
+  <input type="text" id="gifIdInput" placeholder="GIF ID">
+  <button onclick="deleteGif()">Delete GIF</button>
+
+  <div id="formsContainer" style="display: flex; flex-direction: row;">
+  <div id="updateNameForm" style="flex: 1; margin-right: 20px;">
+    <h2>Update GIF Name</h2>
+    <input type="text" id="updateNameInput" placeholder="Enter new GIF name">
+    <button onclick="updateGifName()">Update Name</button>
+    
+  </div>
+
+  <div id="editAttributesForm" style="flex: 1;">
+    <h2>Edit Attributes</h2>
+    <input type="text" id="editAttributesInput" placeholder="Enter new attributes (comma-separated)">
+    <button onclick="editGifAttributes()">Edit GIF Attributes</button>
+  </div>
+</div>
+
+    
+  <!-- Блок для відображення списку гіфок -->
+  <div class="gif-container" id="allGifContainer" style="display: block;">
+    <h2>List of GIFs</h2>
+    <div class="gif-columns">
+      <ul id="gifList"></ul>
+    </div>
+  </div>
+
+  <script>
+    displayGifList();// Виклик функції при завантаженні сторінки для відображення списку всіх гіфок
+
+    function deleteGif() {
+      const gifIdInputDel = document.getElementById('gifIdInput');
+      const gifId = gifIdInputDel.value;
+
+      if (!gifId) {
+        alert('Please enter GIF ID to delete.');
+        return;
+      }
+
+      fetch(`/gif/${gifId}`, {
+        method: 'DELETE',
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log('GIF deleted successfully.');
+            alert('GIF deleted successfully.');
+          } else if (response.status === 404) {
+            console.error('GIF not found.');
+            alert('GIF not found.');
+          } else {
+            console.error('Error deleting GIF:', response.status);
+            alert('Error deleting GIF.');
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting GIF:', error);
+          alert('Error deleting GIF.');
+        });
+    }
+
+    function updateGifName() {
+      const gifIdInputUpdate = document.getElementById('gifIdInput');
+      const updateNameInput = document.getElementById('updateNameInput');
+      const gifId = gifIdInputUpdate.value;
+      const newName = updateNameInput.value;
+
+      if (!gifId || !newName) {
+        alert('Please enter both GIF ID and new name.');
+        return;
+      }
+
+      fetch(`/edit-name/${gifId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newName }),
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log('GIF name updated successfully.');
+            alert('GIF name updated successfully.');
+          } else {
+            console.error('Error updating GIF name:', response.status);
+            alert('Error updating GIF name');
+          }
+        })
+        .catch(error => {
+          console.error('Error updating GIF name:', error);
+          alert('Error updating GIF name');
+        });
+    }
+
+    function editGifAttributes() {
+      const gifIdInputEdit = document.getElementById('gifIdInput');
+      const editAttributesInput = document.getElementById('editAttributesInput');
+      const gifId = gifIdInputEdit.value;
+      const newAttributes = editAttributesInput.value.split(',').map(attribute => attribute.trim());
+
+      if (!gifId || newAttributes.some(attribute => attribute.length < 2)) {
+        alert('Please enter both GIF ID and new attributes (more than 1 letter).');
+        return;
+      }
+
+      fetch(`/edit-attributes/${gifId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newAttributes }),
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log('GIF attributes updated successfully.');
+            alert('GIF attributes updated successfully.');
+          } else {
+            console.error('Error updating GIF attributes:', response.status);
+            alert('Error updating GIF attributes');
+          }
+        })
+        .catch(error => {
+          console.error('Error updating GIF attributes:', error);
+          alert('Error updating GIF attributes');
+        });
+    }
+
+  </script>
+</body>
+</html>
+
