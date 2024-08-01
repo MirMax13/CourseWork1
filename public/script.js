@@ -48,10 +48,10 @@ function showTab(tabName) {
     window.location.href = '/search-by-attributes'; 
   }
   else if (tabName === 'modGif') {
-    if (!isAuthenticated){
-      authenticateAndShowTab('modGif');
-      return;
-    }
+    // if (!isAuthenticated){
+    //   authenticateAndShowTab('modGif');
+    //   return;
+    // }
     window.location.href = '/modify-gifs'; 
   }
 }
