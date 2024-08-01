@@ -219,9 +219,9 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         additionalAttributes = req.body.attributes.split(',').map(attribute => attribute.trim());
       }
 
-      // Додати атрибути
+      // Додати атрибути 
       const allAttributes = [...new Set([defaultAttribute, ...additionalAttributes])];
-
+      //TODO: Check if all is duplicated 
       // Перевірка на GIF
       if (mimetype !== 'image/gif') {
         fs.unlinkSync(req.file.path);
