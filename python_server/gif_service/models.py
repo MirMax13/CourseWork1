@@ -12,7 +12,7 @@ class Gif(models.Model):
     filename = models.CharField(max_length=200)
     data= models.BinaryField()
     contentType = models.CharField(max_length=50)
-    attributes=models.TextField()
+    attributes=models.JSONField()
     objects = GifManager()
     
     def __str__(self):

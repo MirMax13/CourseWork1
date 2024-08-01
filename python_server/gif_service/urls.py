@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from .views import UploadGif
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -12,5 +13,6 @@ urlpatterns = [
     #TODO:
     # path("Search-By-Name/<str:name>", views.SearchByName, name="Search-By-Name"),
     path("search-by-attributes", views.SearchByAttribute, name="Search-By-Attributes"),
-    path("Modify-Gif", views.ModifyGif, name="Modify-Gif"),
+    path("modify-gifs", views.ModifyGif, name="Modify-Gifs"),
+    path("upload", UploadGif, name="Upload-Gif"),
 ]

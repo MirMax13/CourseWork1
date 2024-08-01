@@ -22,14 +22,16 @@
     <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
     <button class="tab-button active-tab" data-tab="modGif" onclick="showTab('modGif')">Modify Gifs</button>
   </div>
-
+  
   <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" style="display: block;">
+    {% csrf_token %}
     <h2>File Upload</h2>
     <input type="file" name="file">
+    <input type="text" name="filename" id="filename" placeholder="Enter GIF name">
     <input type="text" name="attributes" id="attributesInput" placeholder="Enter attributes (comma-separated)">
-    <input type="hidden" name="defaultAttribute" value="all"> <!-- Прихований ввід для атрибута за замовчуванням -->
     <input type="submit" value="Upload File">
   </form>
+  
 
 
   <input type="text" id="gifIdInput" placeholder="GIF ID">

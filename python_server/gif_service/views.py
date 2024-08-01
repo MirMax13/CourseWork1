@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.template import loader
 from .models import Gif
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 gifs = Gif.objects.all()
 context = {
@@ -32,18 +34,34 @@ def SearchByAttribute(request):
 def ModifyGif(request):
     return render(request, "Modify-Gif.html", context)
 
-def UploadGif(request): #TODO: Maybe upgrade
-    if request.method == "POST":
+@csrf_exempt
+def UploadGif(request):
+    if request.method == "POST" and request.FILES['file']:
         try:
+            if 'file' not in request.FILES:
+                return HttpResponse("No file uploaded", status=400)
+            data = request.FILES.get("file").read()
+            default_filename = request.FILES.get("file").name
             filename = request.POST.get("filename")
-            data = request.FILES.get("data").read()
-            contentType = request.FILES.get("data").content_type
+            if not filename:
+                filename = default_filename
+            contentType = request.FILES.get("file").content_type
             attributes = request.POST.get("attributes")
+            if attributes:
+                attributes = [attr.strip() for attr in attributes.split(',')]
+                if not isinstance(attributes, list):
+                    return HttpResponse("Attributes should be a list", status=400)
+            else:
+                attributes = []
+            if "all" not in attributes:
+                attributes.append("all")
+
             gif = Gif(filename=filename, data=data, contentType=contentType, attributes=attributes)
             gif.save()
             return HttpResponse("Gif uploaded successfully", status=201)
         except Exception as e:
-            return HttpResponse(str(e), status=500)
+           return HttpResponse(str(e), status=400)
+    return HttpResponse("Invalid request method", status=405)
         
 def error_404_view(request, exception):
     return render(request, "404.html", status=404)
