@@ -168,7 +168,7 @@ function displayGifList() {
     .then(data => {
       if (data.length > 0) {
         data.forEach(gif => {
-          const listItem = document.createElement('li');
+          const listItem = document.createElement('li'); //TODO: Check if work with id instead of _id
           listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
           gifList.appendChild(listItem);
         });
