@@ -114,8 +114,11 @@ function openGif() {
       });
   fetch(`/gif-name/${gifId}`) // Отримання назви
       .then(response => response.json())
-      .then(filename => {
-        document.getElementById('gifName').textContent = `GIF Name: ${filename}`;
+      // .then(filename => {
+      //   document.getElementById('gifName').textContent = `GIF Name: ${filename}`;
+    // })
+      .then(data => {
+        document.getElementById('gifName').textContent = `GIF Name: ${data.filename}`;
       })
       .catch(error => {
         console.error('Error fetching GIF name:', error);
@@ -169,7 +172,7 @@ function displayGifList() {
       if (data.length > 0) {
         data.forEach(gif => {
           const listItem = document.createElement('li');
-          listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+          listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
           gifList.appendChild(listItem);
         });
       } else {
