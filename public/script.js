@@ -114,7 +114,7 @@ function openGif() {
       });
   fetch(`/gif-name/${gifId}`) // Отримання назви
       .then(response => response.json())
-      .then(filename => {
+      .then(filename => { //TODO: Check in express does it work with data.filename
         document.getElementById('gifName').textContent = `GIF Name: ${filename}`;
       })
       .catch(error => {
