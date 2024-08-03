@@ -48,10 +48,10 @@ function showTab(tabName) {
     window.location.href = '/search-by-attributes'; 
   }
   else if (tabName === 'modGif') {
-    if (!isAuthenticated){
-      authenticateAndShowTab('modGif');
-      return;
-    }
+    // if (!isAuthenticated){
+    //   authenticateAndShowTab('modGif');
+    //   return;
+    // }
     window.location.href = '/modify-gifs'; 
   }
 }
@@ -114,9 +114,9 @@ function openGif() {
       });
   fetch(`/gif-name/${gifId}`) // Отримання назви
       .then(response => response.json())
-      .then(filename => {
-        document.getElementById('gifName').textContent = `GIF Name: ${filename}`;
-    })
+      .then(data => {
+        document.getElementById('gifName').textContent = `GIF Name: ${data.filename}`;
+      })
       .catch(error => {
         console.error('Error fetching GIF name:', error);
       });
@@ -127,32 +127,51 @@ function showGif(gifId) {
   gifIdInput.value = gifId;
   openGif();
 }
-
 function downloadGif() {
   const gifIdInput = document.getElementById('gifIdInput');
   const gifId = gifIdInput.value;
   const downloadFileNameInput = document.getElementById('downloadFileNameInput');
-  const downloadFileName = downloadFileNameInput.value || 'downloaded.gif';
-  fetch(`/download-gif/${gifId}?fileName=${downloadFileName}`)
+  const downloadFileName = downloadFileNameInput.value;
+
+  let url = `/download-gif/${gifId}`;
+  if (downloadFileName) {
+    url += `?fileName=${encodeURIComponent(downloadFileName)}`;
+  }
+
+  console.log(`Fetching URL: ${url}`);
+
+  fetch(url)
     .then(response => {
+      console.log(`Response status: ${response.status}`);
       if (response.status === 404) {
         console.error('GIF not found');
       } else if (!response.ok) {
         console.error('Error fetching GIF:', response.status);
       } else {
-        return response.blob();
+        const contentDisposition = response.headers.get('Content-Disposition');
+        console.log(`Content-Disposition header: ${contentDisposition}`);
+        let filename = 'downloaded.gif';
+        if (contentDisposition && contentDisposition.includes('filename=')) {
+          const encodedFilename = contentDisposition.split('filename*=')[1] || contentDisposition.split('filename=')[1];
+          if (encodedFilename) {
+            filename = decodeURIComponent(encodedFilename.replace(/UTF-8''/, '').replace(/"/g, ''));
+          }
+        }
+        console.log(`Content-Disposition filename: ${filename}`);
+        return response.blob().then(blob => ({ blob, filename }));
       }
     })
-    .then(blob => {
+    .then(({ blob, filename }) => {
       if (blob) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = downloadFileName;
+        a.download = downloadFileName || filename;
         a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
+        console.log(`GIF downloaded as: ${a.download}`);
       }
     })
     .catch(error => {
@@ -169,7 +188,7 @@ function displayGifList() {
       if (data.length > 0) {
         data.forEach(gif => {
           const listItem = document.createElement('li');
-          listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+          listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
           gifList.appendChild(listItem);
         });
       } else {
@@ -189,7 +208,7 @@ function displayGifListByAttribute(attribute) {
       if (data.length > 0) {
         data.forEach(gif => {
           const listItem = document.createElement('li');
-          listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+          listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
           gifList.appendChild(listItem);
         });
       } else {
