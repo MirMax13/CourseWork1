@@ -68,7 +68,7 @@
           if (data.length > 0) {
             data.forEach(gif => {
               const listItem = document.createElement('li');
-              listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+              listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
               gifList.appendChild(listItem);
             });
           } else {

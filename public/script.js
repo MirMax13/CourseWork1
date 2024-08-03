@@ -183,3 +183,23 @@ function displayGifList() {
       console.error('Error fetching GIF list:', error);
     });
 }
+function displayGifListByAttribute(attribute) {
+  const gifList = document.getElementById(`${attribute}GifList`);
+
+  fetch(`/gif-list-by-attribute/${attribute}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.length > 0) {
+        data.forEach(gif => {
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
+          gifList.appendChild(listItem);
+        });
+      } else {
+        gifList.innerHTML = `<li>No ${attribute} GIFs available.</li>`;
+      }
+    })
+    .catch(error => {
+      console.error(`Error fetching ${attribute} GIF list:`, error);
+    });
+}
