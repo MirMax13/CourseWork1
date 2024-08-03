@@ -33,9 +33,24 @@
   </form>
   
 
-
+<div id="ViewGIFForm" style="display: block;">
+  <h2>View GIF</h2>
   <input type="text" id="gifIdInput" placeholder="GIF ID">
+  <button onclick="openGif()">Open GIF</button>
   <button onclick="deleteGif()">Delete GIF</button>
+
+  <video id="" controls class="styled-video" style="display: none;"></video>
+  <!-- <video> для відображення GIF з класом "styled-video" -->
+  <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
+  <div id="gifAttributes"></div>
+  <div id="gifName"></div>
+</div>
+
+<div id="zoomControls">
+  <button onclick="zoomIn()">Zoom In</button>
+  <button onclick="zoomOut()">Zoom Out</button>
+  <button onclick="resetZoom()">Reset Zoom</button>
+</div>
 
   <div id="formsContainer" style="display: flex; flex-direction: row;">
   <div id="updateNameForm" style="flex: 1; margin-right: 20px;">
@@ -51,7 +66,7 @@
     <button onclick="editGifAttributes()">Edit GIF Attributes</button>
   </div>
 </div>
-
+  
     
   <!-- Блок для відображення списку гіфок -->
   <div class="gif-container" id="allGifContainer" style="display: block;">
