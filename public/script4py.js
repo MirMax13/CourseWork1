@@ -127,7 +127,7 @@ function showGif(gifId) {
   gifIdInput.value = gifId;
   openGif();
 }
-function downloadGif() {
+function downloadGif() { //TODO: fix if name is not found
   const gifIdInput = document.getElementById('gifIdInput');
   const gifId = gifIdInput.value;
   const downloadFileNameInput = document.getElementById('downloadFileNameInput');
