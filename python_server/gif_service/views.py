@@ -37,6 +37,70 @@ def ModifyGif(request):
 def error_404_view(request, exception):
     return render(request, "404.html", status=404)
 
+def GetGif(request, id):
+    try:
+        gif = Gif.objects.get(id=id)
+        return HttpResponse(gif.data, content_type=gif.contentType)
+    except Gif.DoesNotExist:
+        return HttpResponse("Gif not found", status=404)
+    except Exception as e:
+        return HttpResponse(str(e), status=500)
+    
+def GifAttributes(request, id):
+    try:
+        gif = Gif.objects.get(id=id)
+        return JsonResponse(gif.attributes, safe=False)
+    except Gif.DoesNotExist:
+        return HttpResponse("Gif not found", status=404)
+    except Exception as e:
+        return HttpResponse(str(e), status=500)
+    
+def GifName(request, id):
+    try:
+        gif = Gif.objects.get(id=id)
+        return JsonResponse({'filename': gif.filename})
+    except Gif.DoesNotExist:
+        return HttpResponse("Gif not found", status=404)
+    except Exception as e:
+        return HttpResponse(str(e), status=500)
+    
+def DownloadGif(request, id):
+    try:
+        gif = Gif.objects.get(id=id)
+        response = HttpResponse(gif.data, content_type=gif.contentType)
+        filename = request.GET.get("filename")
+        if not filename:
+            filename = gif.filename
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    except Gif.DoesNotExist:
+        return HttpResponse("Gif not found", status=404)
+    except Exception as e:
+        return HttpResponse(str(e), status=500)
+
+
+def GifList(request):
+    gifs = Gif.objects.all()
+    gif_list = []
+    for gif in gifs:
+        gif_list.append({
+            "id": gif.id,
+            "filename": gif.filename,
+            "attributes": gif.attributes
+        })
+    return JsonResponse(gif_list, safe=False)
+
+def GifListByAttribute(request, attribute):
+    gifs = Gif.objects.filter(attributes__contains=[attribute])
+    gif_list = []
+    for gif in gifs:
+        gif_list.append({
+            "id": gif.id,
+            "filename": gif.filename,
+            "attributes": gif.attributes
+        })
+    return JsonResponse(gif_list, safe=False)
+
 @csrf_exempt
 def UploadGif(request):
     if request.method == "POST" and request.FILES['file']:
@@ -65,52 +129,3 @@ def UploadGif(request):
         except Exception as e:
            return HttpResponse(str(e), status=500)
     return HttpResponse("Invalid request method", status=405)
-def GifList(request):
-    gifs = Gif.objects.all()
-    gif_list = []
-    for gif in gifs:
-        gif_list.append({
-            "id": gif.id,
-            "filename": gif.filename,
-            "attributes": gif.attributes
-        })
-    return JsonResponse(gif_list, safe=False)
-
-def GifListByAttribute(request, attribute):
-    gifs = Gif.objects.filter(attributes__contains=[attribute])
-    gif_list = []
-    for gif in gifs:
-        gif_list.append({
-            "id": gif.id,
-            "filename": gif.filename,
-            "attributes": gif.attributes
-        })
-    return JsonResponse(gif_list, safe=False)
-def GetGif(request, id):
-    try:
-        gif = Gif.objects.get(id=id)
-        return HttpResponse(gif.data, content_type=gif.contentType)
-    except Gif.DoesNotExist:
-        return HttpResponse("Gif not found", status=404)
-    except Exception as e:
-        return HttpResponse(str(e), status=500)
-def GifAttributes(request, id):
-    try:
-        gif = Gif.objects.get(id=id)
-        return JsonResponse(gif.attributes, safe=False)
-    except Gif.DoesNotExist:
-        return HttpResponse("Gif not found", status=404)
-    except Exception as e:
-        return HttpResponse(str(e), status=500)
-    
-def GifName(request, id):
-    try:
-        gif = Gif.objects.get(id=id)
-        return JsonResponse({'filename': gif.filename})
-    except Gif.DoesNotExist:
-        return HttpResponse("Gif not found", status=404)
-    except Exception as e:
-        return HttpResponse(str(e), status=500)
-    
-
-
