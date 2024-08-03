@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from .views import UploadGif, GifList, GetGif, GifAttributes, GifName
+from .views import UploadGif, GifList,GifListByAttribute, GetGif, GifAttributes, GifName
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -16,6 +16,7 @@ urlpatterns = [
     path("modify-gifs", views.ModifyGif, name="Modify-Gifs"),
     path("upload", UploadGif, name="Upload-Gif"),
     path("gif-list", GifList, name="Gif-List"),
+    path("gif-list-by-attribute/<str:attribute>", GifListByAttribute, name="Gif-List-By-Attribute"),
     path("gif/<int:id>", GetGif, name="Get-Gif"),
     path("gif-attributes/<int:id>", GifAttributes, name="Gif-Attributes"),
     path("gif-name/<int:id>", GifName, name="Gif-Name"),

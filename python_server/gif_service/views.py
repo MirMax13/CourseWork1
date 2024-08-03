@@ -51,7 +51,7 @@ def UploadGif(request):
             contentType = request.FILES.get("file").content_type
             attributes = request.POST.get("attributes")
             if attributes:
-                attributes = [attr.strip() for attr in attributes.split(',')]
+                attributes = [attr.strip().lower() for attr in attributes.split(',')]
                 if not isinstance(attributes, list):
                     return HttpResponse("Attributes should be a list", status=400)
             else:
@@ -67,6 +67,17 @@ def UploadGif(request):
     return HttpResponse("Invalid request method", status=405)
 def GifList(request):
     gifs = Gif.objects.all()
+    gif_list = []
+    for gif in gifs:
+        gif_list.append({
+            "id": gif.id,
+            "filename": gif.filename,
+            "attributes": gif.attributes
+        })
+    return JsonResponse(gif_list, safe=False)
+
+def GifListByAttribute(request, attribute):
+    gifs = Gif.objects.filter(attributes__contains=[attribute])
     gif_list = []
     for gif in gifs:
         gif_list.append({
