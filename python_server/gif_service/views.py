@@ -111,7 +111,7 @@ def GifListByName(request, name):
         })
     return JsonResponse(gif_list, safe=False)
 
-@csrf_exempt
+@csrf_protect
 @login_required
 def EditName(request, id):
     if request.method == 'PUT':
@@ -130,7 +130,7 @@ def EditName(request, id):
             return HttpResponse(str(e), status=500)
     return HttpResponse("Invalid request method", status=405)
 
-@csrf_exempt
+@csrf_protect
 @login_required
 def EditAttributes(request, id):
     if request.method == 'PUT':
