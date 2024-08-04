@@ -2,8 +2,10 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .models import Gif
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect, get_token
 import json
+import os
+
 
 gifs = Gif.objects.all()
 context = {
@@ -36,16 +38,7 @@ def ModifyGif(request):
 
 def error_404_view(request, exception):
     return render(request, "404.html", status=404)
-
-def GetGif(request, id):
-    try:
-        gif = Gif.objects.get(id=id)
-        return HttpResponse(gif.data, content_type=gif.contentType)
-    except Gif.DoesNotExist:
-        return HttpResponse("Gif not found", status=404)
-    except Exception as e:
-        return HttpResponse(str(e), status=500)
-    
+ 
 def GifAttributes(request, id):
     try:
         gif = Gif.objects.get(id=id)
@@ -148,6 +141,29 @@ def EditAttributes(request, id):
             return HttpResponse(str(e), status=500)
     return HttpResponse("Invalid request method", status=405)
 
+def GifData(request, id):
+    if request.method == 'GET':
+        try:
+            gif = Gif.objects.get(id=id)
+            return HttpResponse(gif.data, content_type=gif.contentType)
+        except Gif.DoesNotExist:
+            return HttpResponse("Gif not found", status=404)
+        except Exception as e:
+            return HttpResponse(str(e), status=500)
+    elif request.method == 'DELETE':
+        try:
+            gif = Gif.objects.get(id=id)
+            gif.delete()
+            if not Gif.objects.filter(id=id).exists():
+                return HttpResponse("Gif deleted successfully")
+            else:
+                return HttpResponse("Failed to delete Gif", status=500)
+        except Gif.DoesNotExist:
+            return HttpResponse("Gif not found", status=404)
+        except Exception as e:
+            return HttpResponse(str(e), status=500)
+    return HttpResponse("Invalid request method", status=405)
+    
 def UploadGif(request):
     if request.method == "POST" and request.FILES['file']:
         try:
@@ -174,4 +190,26 @@ def UploadGif(request):
             return HttpResponse("Gif uploaded successfully", status=201)
         except Exception as e:
            return HttpResponse(str(e), status=500)
+    return HttpResponse("Invalid request method", status=405)
+
+
+@csrf_protect
+def CheckAuth(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+        
+        login = data.get("login")
+        password = data.get("password")
+        if login == os.getenv('ADMIN_LOGIN') and password == os.getenv('ADMIN_PASSWORD'):
+            request.session['isAuthenticated'] = True
+            return JsonResponse({"isAuthenticated": True})
+        else:
+            request.session['isAuthenticated'] = False
+            return JsonResponse({"isAuthenticated": False})
+    elif request.method == 'GET':
+        csrf_token = get_token(request)
+        return JsonResponse({"csrfToken": csrf_token})
     return HttpResponse("Invalid request method", status=405)

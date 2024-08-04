@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from .views import UploadGif, GifList,GifListByAttribute,DownloadGif, GetGif, GifAttributes, GifName,GifListByName,EditName,EditAttributes
+from .views import UploadGif, GifList,GifListByAttribute,DownloadGif, GifData, GifAttributes, GifName,GifListByName,EditName,EditAttributes,CheckAuth
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -15,7 +15,7 @@ urlpatterns = [
     path("search-by-attributes", views.SearchByAttribute, name="Search-By-Attributes"),
     path("modify-gifs", views.ModifyGif, name="Modify-Gifs"),
     
-    path("gif/<int:id>", GetGif, name="Get-Gif"),
+    path("gif/<int:id>", GifData, name="Gif-Data"),
     path("gif-attributes/<int:id>", GifAttributes, name="Gif-Attributes"),
     path("gif-name/<int:id>", GifName, name="Gif-Name"),
     path("download-gif/<int:id>", DownloadGif, name="Download-Gif"),
@@ -25,5 +25,6 @@ urlpatterns = [
     path("edit-name/<int:id>", EditName, name="Edit-Name"),
     path("edit-attributes/<int:id>", EditAttributes, name="Edit-Attributes"),
     path("upload", UploadGif, name="Upload-Gif"),
+    path("check-auth", CheckAuth, name="Check-Auth"),
 
 ]
