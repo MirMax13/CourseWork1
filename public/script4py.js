@@ -1,31 +1,50 @@
 let isAuthenticated = false;
+let csrfToken = '';
+document.addEventListener('DOMContentLoaded', function () {
+    csrfToken = getCsrfToken();
+    function getCsrfToken() {
+        const tokenElement = document.querySelector('meta[name="csrf-token"]');
+        if (tokenElement) {
+            return tokenElement.getAttribute('content');
+        } else {
+            console.error('CSRF token not found');
+            return '';
+        }
+    }
 
-function authenticateAndShowTab(tabName) {
-  const login = prompt('Enter login:');
-  const password = prompt('Enter password:');
+    
+});
+function authenticateAndShowTab() {
+        const login = prompt('Enter login:');
+        const password = prompt('Enter password:');  
 
-  fetch('/check-auth', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ login, password }),
-  })
-    .then(response => {
-      if (response.ok) {
-        isAuthenticated = true;
-        sessionStorage.setItem('isAuthenticated', 'true');
-        showTab('modGif');
-      } else {
-        isAuthenticated = false;
-        alert('Invalid login or password. Please try again.');
-      }
-    })
-    .catch(error => {
-      console.error('Error checking authentication:', error);
-    });
-}
-
+        fetch('/check-auth', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({ login, password }),
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.isAuthenticated) {
+                isAuthenticated = true;
+                sessionStorage.setItem('isAuthenticated', 'true');
+                showTab('modGif');
+            } else {
+                isAuthenticated = false;
+                alert('Invalid login or password. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error checking authentication:', error);
+        });
+    }
 function showTab(tabName) {
   const savedAuthStatus = sessionStorage.getItem('isAuthenticated');
   isAuthenticated = savedAuthStatus === 'true';
@@ -48,10 +67,10 @@ function showTab(tabName) {
     window.location.href = '/search-by-attributes'; 
   }
   else if (tabName === 'modGif') {
-    // if (!isAuthenticated){
-    //   authenticateAndShowTab('modGif');
-    //   return;
-    // }
+    if (!isAuthenticated){
+      authenticateAndShowTab();
+      return;
+    }
     window.location.href = '/modify-gifs'; 
   }
 }
@@ -74,7 +93,7 @@ function resetZoom() {
   currentScale = 1; // Повернення до звичайного масштабу
   applyScale();
 }
-
+      
 function openGif() {
   const gifIdInput = document.getElementById('gifIdInput');
   const gifId = gifIdInput.value;

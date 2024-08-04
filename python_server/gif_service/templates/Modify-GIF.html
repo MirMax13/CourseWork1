@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token }}">
   <title>Modify GIFs</title>
   <!-- Підключення стилів -->
   <link rel="stylesheet" type="text/css" href="/public/styles.css">
@@ -79,9 +80,14 @@
   <script>
     displayGifList();// Виклик функції при завантаженні сторінки для відображення списку всіх гіфок
 
+    function getCsrfToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]').value;
+      }
+    
     function deleteGif() {
       const gifIdInputDel = document.getElementById('gifIdInput');
       const gifId = gifIdInputDel.value;
+      const csrfToken = getCsrfToken();
 
       if (!gifId) {
         alert('Please enter GIF ID to delete.');
@@ -90,6 +96,9 @@
 
       fetch(`/gif/${gifId}`, {
         method: 'DELETE',
+        headers: {
+          'X-CSRFToken': csrfToken
+        }
       })
         .then(response => {
           if (response.ok) {
