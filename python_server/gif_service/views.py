@@ -11,6 +11,14 @@ gifs = Gif.objects.all()
 context = {
     "gifs": gifs
 }
+
+def login_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.session.get('isAuthenticated'):
+            return JsonResponse({"error": "Unauthorized"}, status=401)
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
 #TODO: Add the 404 error page (Express and Django)
 def index(request):
     return render(request, "main.html", context)
@@ -104,6 +112,7 @@ def GifListByName(request, name):
     return JsonResponse(gif_list, safe=False)
 
 @csrf_exempt
+@login_required
 def EditName(request, id):
     if request.method == 'PUT':
         try:
@@ -122,6 +131,7 @@ def EditName(request, id):
     return HttpResponse("Invalid request method", status=405)
 
 @csrf_exempt
+@login_required
 def EditAttributes(request, id):
     if request.method == 'PUT':
         try:
@@ -141,6 +151,7 @@ def EditAttributes(request, id):
             return HttpResponse(str(e), status=500)
     return HttpResponse("Invalid request method", status=405)
 
+@login_required
 def GifData(request, id):
     if request.method == 'GET':
         try:
@@ -163,7 +174,8 @@ def GifData(request, id):
         except Exception as e:
             return HttpResponse(str(e), status=500)
     return HttpResponse("Invalid request method", status=405)
-    
+
+@login_required  
 def UploadGif(request):
     if request.method == "POST" and request.FILES['file']:
         try:
@@ -213,3 +225,4 @@ def CheckAuth(request):
         csrf_token = get_token(request)
         return JsonResponse({"csrfToken": csrf_token})
     return HttpResponse("Invalid request method", status=405)
+
