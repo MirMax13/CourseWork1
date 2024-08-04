@@ -4,11 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token }}">
   <title>Search GIF by attribute</title>
   <!-- Підключення стилів -->
   <link rel="stylesheet" type="text/css" href="/public/styles.css">
   <!-- Підключення скрипту -->
-  <script src="/public/script.js"></script>
+  <script src="/public/script4py.js"></script>
 </head>
 <body>
   <div id="tabs">
@@ -68,7 +69,7 @@
           if (data.length > 0) {
             data.forEach(gif => {
               const listItem = document.createElement('li');
-              listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+              listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
               gifList.appendChild(listItem);
             });
           } else {

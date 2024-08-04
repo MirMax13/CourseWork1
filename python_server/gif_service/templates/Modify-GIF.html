@@ -4,11 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token }}">
   <title>Modify GIFs</title>
   <!-- Підключення стилів -->
   <link rel="stylesheet" type="text/css" href="/public/styles.css">
   <!-- Підключення скрипту -->
-  <script src="/public/script.js"></script>
+  <script src="/public/script4py.js"></script>
 </head>
 <body>
   <div id="tabs">
@@ -33,9 +34,24 @@
   </form>
   
 
-
+<div id="ViewGIFForm" style="display: block;">
+  <h2>View GIF</h2>
   <input type="text" id="gifIdInput" placeholder="GIF ID">
+  <button onclick="openGif()">Open GIF</button>
   <button onclick="deleteGif()">Delete GIF</button>
+
+  <video id="" controls class="styled-video" style="display: none;"></video>
+  <!-- <video> для відображення GIF з класом "styled-video" -->
+  <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
+  <div id="gifAttributes"></div>
+  <div id="gifName"></div>
+</div>
+
+<div id="zoomControls">
+  <button onclick="zoomIn()">Zoom In</button>
+  <button onclick="zoomOut()">Zoom Out</button>
+  <button onclick="resetZoom()">Reset Zoom</button>
+</div>
 
   <div id="formsContainer" style="display: flex; flex-direction: row;">
   <div id="updateNameForm" style="flex: 1; margin-right: 20px;">
@@ -51,7 +67,7 @@
     <button onclick="editGifAttributes()">Edit GIF Attributes</button>
   </div>
 </div>
-
+  
     
   <!-- Блок для відображення списку гіфок -->
   <div class="gif-container" id="allGifContainer" style="display: block;">
@@ -64,9 +80,14 @@
   <script>
     displayGifList();// Виклик функції при завантаженні сторінки для відображення списку всіх гіфок
 
+    function getCsrfToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]').value;
+      }
+    
     function deleteGif() {
       const gifIdInputDel = document.getElementById('gifIdInput');
       const gifId = gifIdInputDel.value;
+      const csrfToken = getCsrfToken();
 
       if (!gifId) {
         alert('Please enter GIF ID to delete.');
@@ -75,6 +96,9 @@
 
       fetch(`/gif/${gifId}`, {
         method: 'DELETE',
+        headers: {
+          'X-CSRFToken': csrfToken
+        }
       })
         .then(response => {
           if (response.ok) {
@@ -105,10 +129,11 @@
         return;
       }
 
-      fetch(`/edit-name/${gifId}`, {
+      fetch(`/edit-name/${gifId}`, { // TODO: Why after changing name, it is displayed in new order?
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
         },
         body: JSON.stringify({ newName }),
       })
@@ -142,6 +167,7 @@
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
         },
         body: JSON.stringify({ newAttributes }),
       })

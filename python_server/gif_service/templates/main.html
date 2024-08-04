@@ -4,12 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token }}">
   <title>All GIF List</title>
   <!-- Підключення стилів -->
   <link rel="stylesheet" type="text/css" href="/public/styles.css">
   <!-- Підключення скрипту -->
   <!--<link rel="shortcut icon"type="image/ico"href="/fav/favicon.ico"/>-->
-  <script src="/public/script.js"></script>
+  <script src="/public/script4py.js"></script>
 </head>
 <body>
   <div id="tabs">
@@ -24,10 +25,11 @@
     <button class="tab-button" data-tab="modGif" onclick="showTab('modGif')">Modify Gifs</button>
   </div>
 
+
   <div id="ViewAndDownloadGIFForm" style="display: block;">
     <h2>View and Download GIF</h2>
     <input type="text" id="gifIdInput" placeholder="GIF ID">
-    <input type="text" id="downloadFileNameInput" placeholder="Enter file name (in Latin)">
+    <input type="text" id="downloadFileNameInput" name="filename" placeholder="Enter file name (in Latin)">
     <button onclick="openGif()">Open GIF</button>
     <button onclick="downloadGif()">Download GIF</button>
         
