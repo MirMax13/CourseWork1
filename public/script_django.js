@@ -1,5 +1,5 @@
-let isAuthenticated = false;
 console.log('script_django.js loaded');
+let isAuthenticated = false;
 function authenticateAndShowTab() {
         const login = prompt('Enter login:');
         const password = prompt('Enter password:');  

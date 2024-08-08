@@ -1,6 +1,6 @@
 
-let isAuthenticated = false;
 console.log('script_express.js loaded');
+let isAuthenticated = false;
 function authenticateAndShowTab() { //TODO: fix with sessions
   const login = prompt('Enter login:');
   const password = prompt('Enter password:');

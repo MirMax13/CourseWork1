@@ -15,10 +15,10 @@ if (!fs.existsSync(uploadsPath)) {
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, 'uploads/'); // Папка для зберігання завантажених файлів
+      callback(null, 'uploads/');
     },
     filename: (req, file, callback) => {
-      callback(null, file.originalname); // Ім'я файлу зберігається без змін
+      callback(null, file.originalname);
     },
   });
   
@@ -40,7 +40,7 @@ router.get('/gif/:id', async (req, res) => {
     res.setHeader('Content-Type', gif.contentType);
     res.send(gif.data);
   } catch (error) {
-    res.status(500).send('Помилка відкриття GIF з бази даних');
+    res.status(500).send('Error opening GIF from the database');
   }
 });
 
@@ -55,7 +55,7 @@ router.get('/gif-attributes/:id', async (req, res) => {
 
     res.json(gif.attributes);
   } catch (error) {
-    res.status(500).send('Помилка отримання атрибутів GIF з бази даних');
+    res.status(500).send('Error getting GIF attributes from the database');
   }
 });
   
@@ -70,7 +70,7 @@ router.get('/gif-name/:id', async (req, res) => {
 
       res.json({ filename: gif.filename });
   } catch (error) {
-      res.status(500).send('Помилка отримання атрибутів GIF з бази даних');
+      res.status(500).send('Error getting GIF name from the database');
   }
   });
   
@@ -89,7 +89,7 @@ router.get('/download-gif/:id', async (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename=${downloadFileName}`);
     res.send(gif.data);
   } catch (error) {
-    res.status(500).send('Помилка відкриття GIF з бази даних');
+    res.status(500).send('Error downloading GIF from the database');
   }
 });
   
@@ -98,7 +98,7 @@ router.get('/gif-list', async (req, res) => {
     const gifs = await GifModel.find({}, 'filename id');
     res.json(gifs);
   } catch (error) {
-    res.status(500).send('Помилка отримання списку GIFs');
+    res.status(500).send('Error getting GIF list from the database');
   }
 });
   
@@ -108,7 +108,7 @@ router.get('/gif-list-by-name/:name', async (req, res) => {
     const gifs = await GifModel.find({ filename: { $regex: searchTerm, $options: 'i' } }, 'filename id');
     res.json(gifs);
   } catch (error) {
-    res.status(500).send('Помилка пошуку GIFs за назвою');
+    res.status(500).send('Error searching by name');
   }
 });
   
@@ -142,7 +142,7 @@ router.put('/edit-name/:id', async (req, res) => {
     const updatedGif = await GifModel.findOneAndUpdate(
       { id: gifId },
       { $set: { filename: newName } },
-      { new: true } // Повернути оновлений документ
+      { new: true }
     );
 
     if (!updatedGif) {
@@ -174,10 +174,8 @@ router.put('/edit-attributes/:id', async (req, res) => {
       return res.status(404).send('GIF not found');
     }
 
-    // Застосувати зміни до атрибутів
     gif.attributes = newAttributes;
 
-    // Зберегти зміни у базі даних
     await gif.save();
 
     return res.status(200).send('Attributes updated successfully');
@@ -220,10 +218,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         additionalAttributes = req.body.attributes.split(',').map(attribute => attribute.trim());
       }
 
-      // Додати атрибути 
       const allAttributes = [...new Set([defaultAttribute, ...additionalAttributes])];
       //TODO: Check if all appears if it is not in the list
-      // Перевірка на GIF
       if (mimetype !== 'image/gif') {
         fs.unlinkSync(req.file.path);
         return res.status(400).send('Only GIF files are allowed.');

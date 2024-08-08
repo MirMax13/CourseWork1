@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return '';
         }
     }
-
-    
 });
 
 function showTab(tabName) {
@@ -45,21 +43,21 @@ function showTab(tabName) {
 }
 
 function applyScale() {
-  gifImage.style.transform = `scale(${currentScale})`;// Застосування масштабу до зображення
+  gifImage.style.transform = `scale(${currentScale})`;
 }
 
 function zoomIn() {
-  currentScale += 0.1; // Збільшення масштабу на 10%
+  currentScale += 0.1;
   applyScale();
 }
 
 function zoomOut() {
-  currentScale -= 0.1; // Зменшення масштабу на 10%
+  currentScale -= 0.1;
   applyScale();
 }
 
 function resetZoom() {
-  currentScale = 1; // Повернення до звичайного масштабу
+  currentScale = 1;
   applyScale();
 }
 
@@ -92,7 +90,7 @@ function openGif() {
     .catch(error => {
       console.error('Error fetching GIF:', error);
     }); 
-  fetch(`/gif-attributes/${gifId}`) // Отримання атрибутів
+  fetch(`/gif-attributes/${gifId}`)
       .then(response => response.json())
       .then(attributes => {
         document.getElementById('gifAttributes').textContent = `Attributes: ${attributes.join(', ')}`;
@@ -100,7 +98,7 @@ function openGif() {
       .catch(error => {
         console.error('Error fetching attributes:', error);
       });
-  fetch(`/gif-name/${gifId}`) // Отримання назви
+  fetch(`/gif-name/${gifId}`)
       .then(response => response.json())
       .then(data => { 
         document.getElementById('gifName').textContent = `GIF Name: ${data.filename}`;

@@ -10,8 +10,6 @@ urlpatterns = [
     path("arctic-vixen", views.ArcticVixen, name="Arctic-Vixen"),
     path("others", views.Others, name="Others"),
     path("search-by-name", views.SearchByName, name="Search-By-Name"),
-    #TODO:
-    # path("Search-By-Name/<str:name>", views.SearchByName, name="Search-By-Name"),
     path("search-by-attributes", views.SearchByAttribute, name="Search-By-Attributes"),
     path("modify-gifs", views.ModifyGif, name="Modify-Gifs"),
     

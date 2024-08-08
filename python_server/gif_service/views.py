@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .models import Gif
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt, csrf_protect, get_token
+from django.views.decorators.csrf import csrf_protect, get_token
 import json
 import os
 
@@ -73,7 +73,6 @@ def DownloadGif(request, id):
         return HttpResponse("Gif not found", status=404)
     except Exception as e:
         return HttpResponse(str(e), status=500)
-
 
 def GifList(request):
     gifs = Gif.objects.all()
@@ -200,7 +199,6 @@ def UploadGif(request):
         except Exception as e:
            return HttpResponse(str(e), status=500)
     return HttpResponse("Invalid request method", status=405)
-
 
 @csrf_protect
 def CheckAuth(request):
