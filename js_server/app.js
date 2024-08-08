@@ -54,42 +54,41 @@ app.get('/public/script.js', (req, res) => {
   res.sendFile(path.join(__dirname, '..','public', 'script.js'));
 });
 
-// Маршрути
 app.get('/', (req, res) => {
-  res.render('main');
+  res.sendFile(path.join(__dirname, '..', 'views', 'main.html'));
 });
 
 app.get('/Comaru', (req, res) => {
-  res.render('Comaru');
+  res.sendFile(path.join(__dirname, '..', 'views', 'Comaru.html'));
 });
 
 app.get('/Pig', (req, res) => {
-  res.render('Pig');
+  res.sendFile(path.join(__dirname, '..', 'views', 'Pig.html'));
 });
 
 app.get('/arctic-vixen', (req, res) => {
-  res.render('Arctic-Vixen');
+  res.sendFile(path.join(__dirname, '..', 'views', 'Arctic-Vixen.html'));
 });
 
 app.get('/Others', (req, res) => {
-  res.render('Others');
+  res.sendFile(path.join(__dirname, '..', 'views', 'Others.html'));
 });
 
 app.get('/search-By-Name', (req, res) => {
-  res.render('Search-by-name');
+  res.sendFile(path.join(__dirname, '..', 'views', 'Search-by-name.html'));
 });
 
 app.get('/search-By-Attributes', (req, res) => {
-  res.render('Search-by-attributes');
+  res.sendFile(path.join(__dirname, '..', 'views', 'Search-by-attributes.html'));
 });
 
-app.get('/Modify-Gifs', (req, res) => {
+app.get('/modify-gifs', csrfProtection, (req, res) => {
   if (!req.session.isAuthenticated) {
-    res.redirect('/'); // Перенаправлення на головну сторінку
+    res.redirect('/'); 
     return;
   }
 
-  res.render('Modify-GIF');
+  res.sendFile(path.join(__dirname, '..', 'views', 'Modify-GIF.html'));
 });
 
 // Прослуховування порту
