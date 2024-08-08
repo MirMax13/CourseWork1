@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -30,7 +31,7 @@ router.use(bodyParser.json());
 router.get('/gif/:id', async (req, res) => {
   try {
     const gifId = req.params.id;
-    const gif = await GifModel.findById(gifId);
+    const gif = await GifModel.findOne({ id: gifId });
 
     if (!gif) {
       return res.status(404).send('GIF not found');
@@ -47,7 +48,7 @@ router.get('/gif-attributes/:id', async (req, res) => {
   try {
     const gifId = req.params.id;
 
-    const gif = await GifModel.findById(gifId);
+    const gif = await GifModel.findOne({ id: gifId });
     if (!gif) {
       return res.status(404).send('GIF not found');
     }
@@ -62,12 +63,12 @@ router.get('/gif-name/:id', async (req, res) => {
   try {
       const gifId = req.params.id;
 
-      const gif = await GifModel.findById(gifId);
+      const gif = await GifModel.findOne({ id: gifId });
       if (!gif) {
       return res.status(404).send('GIF not found');
       }
 
-      res.json(gif.filename);
+      res.json({ filename: gif.filename });
   } catch (error) {
       res.status(500).send('Помилка отримання атрибутів GIF з бази даних');
   }
@@ -78,7 +79,7 @@ router.get('/download-gif/:id', async (req, res) => {
     const gifId = req.params.id;
     const downloadFileName = req.query.fileName || 'downloaded.gif';
 
-    const gif = await GifModel.findById(gifId);
+    const gif = await GifModel.findOne({ id: gifId });
 
     if (!gif) {
       return res.status(404).send('GIF not found');
@@ -94,7 +95,7 @@ router.get('/download-gif/:id', async (req, res) => {
   
 router.get('/gif-list', async (req, res) => {
   try {
-    const gifs = await GifModel.find({}, 'filename');
+    const gifs = await GifModel.find({}, 'filename id');
     res.json(gifs);
   } catch (error) {
     res.status(500).send('Помилка отримання списку GIFs');
@@ -139,7 +140,7 @@ router.put('/edit-name/:id', async (req, res) => {
     }
 
     const updatedGif = await GifModel.findOneAndUpdate(
-      { _id: gifId },
+      { id: gifId },
       { $set: { filename: newName } },
       { new: true } // Повернути оновлений документ
     );
@@ -192,7 +193,7 @@ router.delete('/gif/:id', async (req, res) => {
       return res.status(401).send('Authentication required');
     }
     const gifId = req.params.id;
-    const deletedGif = await GifModel.findByIdAndDelete(gifId);
+    const deletedGif = await GifModel.findByOneandDelete({ id: gifId });
 
     if (!deletedGif) {
       return res.status(404).send('GIF not found.');
@@ -221,7 +222,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
       // Додати атрибути 
       const allAttributes = [...new Set([defaultAttribute, ...additionalAttributes])];
-      //TODO: Check if all is duplicated 
+      //TODO: Check if all appears if it is not in the list
       // Перевірка на GIF
       if (mimetype !== 'image/gif') {
         fs.unlinkSync(req.file.path);
@@ -230,6 +231,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
       const fileData = fs.readFileSync(req.file.path);
       const gif = new GifModel({
+        id: new mongoose.Types.ObjectId().toString(),
         filename: originalname,
         data: fileData,
         contentType: mimetype,
@@ -237,7 +239,6 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       });
       await gif.save();
 
-      // Видалити тимчасовий файл
       fs.unlinkSync(req.file.path);
 
       res.status(201).send('File successfully uploaded and saved to the database.');
@@ -245,7 +246,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       res.status(400).send('Error: File was not uploaded.');
     }
   } catch (error) {
-    fs.unlinkSync(req.file.path);
+    if (req.file && req.file.path) {
+      fs.unlinkSync(req.file.path);
+    }
+    console.error('Error saving file to the database:', error);
     res.status(500).send('Error saving file to the database.');
   }
 });
@@ -253,13 +257,12 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 router.post('/check-auth', (req, res) => {
   const { login, password } = req.body;
 
-  // Порівняння логіну і паролю з даними адміна
   if (login === process.env.ADMIN_LOGIN && password === process.env.ADMIN_PASSWORD) {
     req.session.isAuthenticated = true;
-    res.status(200).send('Authentication successful');
+    res.status(200).json({ isAuthenticated: true, message: 'Authentication successful' });
   } else {
     req.session.isAuthenticated = false;
-    res.status(401).send('Invalid login or password');
+    res.status(401).json({ isAuthenticated: false, message: 'Invalid login or password' });
   }
 });
 
