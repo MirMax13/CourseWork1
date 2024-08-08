@@ -175,6 +175,11 @@ router.put('/edit-attributes/:id', async (req, res) => {
     }
 
     gif.attributes = newAttributes;
+    
+    if(!('all' in newAttributes)) {
+      gif.attributes.push('all');
+    }
+      
 
     await gif.save();
 

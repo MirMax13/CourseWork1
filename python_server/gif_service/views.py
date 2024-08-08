@@ -139,6 +139,8 @@ def EditAttributes(request, id):
             if not isinstance(newAttributes, list):
                 return HttpResponse("Attributes should be a list", status=400)
             gif.attributes = newAttributes
+            if "all" not in gif.attributes:
+                gif.attributes.append("all")
             gif.save()
             return HttpResponse("Gif attributes updated successfully")
         except Gif.DoesNotExist:
