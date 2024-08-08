@@ -5,11 +5,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token }}">
-  <title>Search GIF by attribute</title>
-  <!-- Підключення стилів -->
+  <meta name="server-type" content="{{ server_type }}">
+  <title>Search GIF by name</title>
   <link rel="stylesheet" type="text/css" href="/public/styles.css">
-  <!-- Підключення скрипту -->
-  <script src="/public/script4py.js"></script>
+  <script>
+    let serverType = "{{ server_type }}";
+    if (serverType === "django") {
+      let script = document.createElement('script');
+      script.src = "/public/script_django.js";
+      document.head.appendChild(script);
+    } else {
+      let script = document.createElement('script');
+      script.src = "/public/script_express.js";
+      document.head.appendChild(script);
+    }
+  </script>
+  <script src="/public/script.js"></script>
 </head>
 <body>
   <div id="tabs">
@@ -19,8 +30,8 @@
     <button class="tab-button" data-tab="arctic_vixen" onclick="showTab('arctic_vixen')">Arctic Vixen</button>
     <button class="tab-button" data-tab="others" onclick="showTab('others')">Others</button>
     
-    <button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
-    <button class="tab-button active-tab" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
+    <button class="tab-button active-tab" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
+    <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
     <button class="tab-button" data-tab="modGif" onclick="showTab('modGif')">Modify Gifs</button>
   </div>
 
@@ -37,9 +48,9 @@
     <div id="gifName"></div>
   </div>
 
-  <div id="searchByAttributeTabContent" style="display: block;">
-    <input type="text" id="searchByAttributeInput" placeholder="Enter GIF attribute">
-    <button onclick="searchByAttribute()">Search</button>
+  <div id="searchByNameTabContent" style="display: block;">
+    <input type="text" id="searchByNameInput" placeholder="Enter GIF name">
+    <button onclick="searchByName()">Search</button>
   </div>
 
   <div id="zoomControls">
@@ -57,17 +68,19 @@
   </div>
 
   <script>
-    function searchByAttribute() {
-      const searchByAttributeInput = document.getElementById('searchByAttributeInput');
-      const attributeSearchTerm = searchByAttributeInput.value;
+    function searchByName() {
+      const searchInput = document.getElementById('searchByNameInput');
+      const searchTerm = searchInput.value;
 
-      fetch(`/gif-list-by-attribute/${attributeSearchTerm}`)
+      fetch(`/gif-list-by-name/${searchTerm}`)
         .then(response => response.json())
         .then(data => {
           const gifList = document.getElementById('gifList');
           gifList.innerHTML = '';
+
           if (data.length > 0) {
             data.forEach(gif => {
+              console.log('GIF ID:', gif.id);
               const listItem = document.createElement('li');
               listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
               gifList.appendChild(listItem);

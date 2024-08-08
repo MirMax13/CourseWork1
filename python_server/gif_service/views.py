@@ -2,15 +2,9 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .models import Gif
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt, csrf_protect, get_token
+from django.views.decorators.csrf import csrf_protect, get_token
 import json
 import os
-
-
-gifs = Gif.objects.all()
-context = {
-    "gifs": gifs
-}
 
 def login_required(view_func):
     def wrapper(request, *args, **kwargs):
@@ -19,33 +13,36 @@ def login_required(view_func):
         return view_func(request, *args, **kwargs)
     return wrapper
 
-#TODO: Add the 404 error page (Express and Django)
 def index(request):
-    return render(request, "main.html", context)
+    return render(request, "main.html",{'server_type': 'django'})
 
 def Comaru(request):
-    return render(request, "Comaru.html")
+    return render(request, "Comaru.html",{'server_type': 'django'})
 
 def Pig(request):
-    return render(request, "Pig.html")
+    return render(request, "Pig.html",{'server_type': 'django'})
 
 def ArcticVixen(request):
-    return render(request, "Arctic-Vixen.html")
+    return render(request, "Arctic-Vixen.html",{'server_type': 'django'})
 
 def Others(request):
-    return render(request, "Others.html")
+    return render(request, "Others.html",{'server_type': 'django'})
 
 def SearchByName(request):
-    return render(request, "Search-By-Name.html")
+    return render(request, "Search-By-Name.html",{'server_type': 'django'})
 
 def SearchByAttribute(request):
-    return render(request, "Search-By-Attributes.html")
+    return render(request, "Search-By-Attributes.html",{'server_type': 'django'})
 
 def ModifyGif(request):
+    context = {
+        'csrf_token': request.COOKIES['csrftoken'],
+        'server_type': 'django'
+    }
     return render(request, "Modify-Gif.html", context)
 
 def error_404_view(request, exception):
-    return render(request, "404.html", status=404)
+    return render(request, "404.html", status=404, context={'server_type': 'django'})
  
 def GifAttributes(request, id):
     try:
@@ -76,7 +73,6 @@ def DownloadGif(request, id):
         return HttpResponse("Gif not found", status=404)
     except Exception as e:
         return HttpResponse(str(e), status=500)
-
 
 def GifList(request):
     gifs = Gif.objects.all()
@@ -143,6 +139,8 @@ def EditAttributes(request, id):
             if not isinstance(newAttributes, list):
                 return HttpResponse("Attributes should be a list", status=400)
             gif.attributes = newAttributes
+            if "all" not in gif.attributes:
+                gif.attributes.append("all")
             gif.save()
             return HttpResponse("Gif attributes updated successfully")
         except Gif.DoesNotExist:
@@ -203,7 +201,6 @@ def UploadGif(request):
         except Exception as e:
            return HttpResponse(str(e), status=500)
     return HttpResponse("Invalid request method", status=405)
-
 
 @csrf_protect
 def CheckAuth(request):

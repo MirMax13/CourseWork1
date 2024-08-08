@@ -1,15 +1,28 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modify GIFs</title>
-  <!-- Підключення стилів -->
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="server-type" content="{{ server_type }}">
+  <title>Modify GIF</title>
   <link rel="stylesheet" type="text/css" href="/public/styles.css">
-  <!-- Підключення скрипту -->
+  <script>
+    let serverType = "{{ server_type }}";
+    if (serverType === "django") {
+      let script = document.createElement('script');
+      script.src = "/public/script_django.js";
+      document.head.appendChild(script);
+    } else {
+      let script = document.createElement('script');
+      script.src = "/public/script_express.js";
+      document.head.appendChild(script);
+    }
+  </script>
   <script src="/public/script.js"></script>
 </head>
+
 <body>
   <div id="tabs">
     <button class="tab-button" data-tab="main" onclick="showTab('main')">Main</button>
@@ -17,40 +30,57 @@
     <button class="tab-button" data-tab="pig" onclick="showTab('pig')">Pig</button>
     <button class="tab-button" data-tab="arctic_vixen" onclick="showTab('arctic_vixen')">Arctic Vixen</button>
     <button class="tab-button" data-tab="others" onclick="showTab('others')">Others</button>
-    
+
     <button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
-    <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
+    <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by
+      attributes</button>
     <button class="tab-button active-tab" data-tab="modGif" onclick="showTab('modGif')">Modify Gifs</button>
   </div>
 
   <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" style="display: block;">
     <h2>File Upload</h2>
     <input type="file" name="file">
+    <input type="text" name="filename" id="filename" placeholder="Enter GIF name">
     <input type="text" name="attributes" id="attributesInput" placeholder="Enter attributes (comma-separated)">
-    <input type="hidden" name="defaultAttribute" value="all"> <!-- Прихований ввід для атрибута за замовчуванням -->
     <input type="submit" value="Upload File">
   </form>
 
 
-  <input type="text" id="gifIdInput" placeholder="GIF ID">
-  <button onclick="deleteGif()">Delete GIF</button>
+  <div id="ViewGIFForm" style="display: block;">
+    <h2>View GIF</h2>
+    <input type="text" id="gifIdInput" placeholder="GIF ID">
+    <button onclick="openGif()">Open GIF</button>
+    <button onclick="deleteGif()">Delete GIF</button>
+
+    <video id="" controls class="styled-video" style="display: none;"></video>
+    <!-- <video> для відображення GIF з класом "styled-video" -->
+    <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
+    <div id="gifAttributes"></div>
+    <div id="gifName"></div>
+  </div>
+
+  <div id="zoomControls">
+    <button onclick="zoomIn()">Zoom In</button>
+    <button onclick="zoomOut()">Zoom Out</button>
+    <button onclick="resetZoom()">Reset Zoom</button>
+  </div>
 
   <div id="formsContainer" style="display: flex; flex-direction: row;">
-  <div id="updateNameForm" style="flex: 1; margin-right: 20px;">
-    <h2>Update GIF Name</h2>
-    <input type="text" id="updateNameInput" placeholder="Enter new GIF name">
-    <button onclick="updateGifName()">Update Name</button>
-    
+    <div id="updateNameForm" style="flex: 1; margin-right: 20px;">
+      <h2>Update GIF Name</h2>
+      <input type="text" id="updateNameInput" placeholder="Enter new GIF name">
+      <button onclick="updateGifName()">Update Name</button>
+
+    </div>
+
+    <div id="editAttributesForm" style="flex: 1;">
+      <h2>Edit Attributes</h2>
+      <input type="text" id="editAttributesInput" placeholder="Enter new attributes (comma-separated)">
+      <button onclick="editGifAttributes()">Edit GIF Attributes</button>
+    </div>
   </div>
 
-  <div id="editAttributesForm" style="flex: 1;">
-    <h2>Edit Attributes</h2>
-    <input type="text" id="editAttributesInput" placeholder="Enter new attributes (comma-separated)">
-    <button onclick="editGifAttributes()">Edit GIF Attributes</button>
-  </div>
-</div>
 
-    
   <!-- Блок для відображення списку гіфок -->
   <div class="gif-container" id="allGifContainer" style="display: block;">
     <h2>List of GIFs</h2>
@@ -60,6 +90,7 @@
   </div>
 
   <script>
+
     displayGifList();// Виклик функції при завантаженні сторінки для відображення списку всіх гіфок
 
     function deleteGif() {
@@ -157,8 +188,7 @@
           alert('Error updating GIF attributes');
         });
     }
-
   </script>
 </body>
-</html>
 
+</html>

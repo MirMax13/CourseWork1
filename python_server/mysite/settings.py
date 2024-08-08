@@ -60,7 +60,10 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [BASE_DIR.parent / 'views'],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'gif_service', 'templates'),
+            os.path.join(BASE_DIR, '..', 'views'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -4,10 +4,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="server-type" content="{{ server_type }}">
   <title>Search GIF by attribute</title>
-  <!-- Підключення стилів -->
   <link rel="stylesheet" type="text/css" href="/public/styles.css">
-  <!-- Підключення скрипту -->
+  <script>
+    let serverType = "{{ server_type }}";
+    if (serverType === "django") {
+      let script = document.createElement('script');
+      script.src = "/public/script_django.js";
+      document.head.appendChild(script);
+    } else {
+      let script = document.createElement('script');
+      script.src = "/public/script_express.js";
+      document.head.appendChild(script);
+    }
+  </script>
   <script src="/public/script.js"></script>
 </head>
 <body>
@@ -68,7 +80,7 @@
           if (data.length > 0) {
             data.forEach(gif => {
               const listItem = document.createElement('li');
-              listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+              listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
               gifList.appendChild(listItem);
             });
           } else {

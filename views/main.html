@@ -4,33 +4,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pig GIF List</title>
-  <!-- Підключення стилів -->
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="server-type" content="{{ server_type }}">
+  <title>All GIF List</title>
   <link rel="stylesheet" type="text/css" href="/public/styles.css">
-  <!-- Підключення скрипту -->
-  <script src="/public/script.js"></script>
+  <!--<link rel="shortcut icon"type="image/ico"href="/fav/favicon.ico"/>-->
+  <script>
+    let serverType = "{{ server_type }}";
+    if (serverType === "django") {
+      let script = document.createElement('script');
+      script.src = "/public/script_django.js";
+      document.head.appendChild(script);
+    } else  {
+      let script = document.createElement('script');
+      script.src = "/public/script_express.js";
+      document.head.appendChild(script);
+    }
+  </script>
+  <script src="/public/script.js" ></script>
 </head>
 <body>
   <div id="tabs">
-    <button class="tab-button" data-tab="main" onclick="showTab('main')">Main</button>
+    <button class="tab-button active-tab" data-tab="main" onclick="showTab('main')">Main</button>
     <button class="tab-button" data-tab="comaruFamily" onclick="showTab('comaruFamily')">Comaru Family</button>
-    <button class="tab-button active-tab" data-tab="pig" onclick="showTab('pig')">Pig</button>
+    <button class="tab-button" data-tab="pig" onclick="showTab('pig')">Pig</button>
     <button class="tab-button" data-tab="arctic_vixen" onclick="showTab('arctic_vixen')">Arctic Vixen</button>
     <button class="tab-button" data-tab="others" onclick="showTab('others')">Others</button>
-
+    
     <button class="tab-button" data-tab="searchByName" onclick="showTab('searchByName')">Search by name</button>
     <button class="tab-button" data-tab="searchByAttributes" onclick="showTab('searchByAttributes')">Search by attributes</button>
     <button class="tab-button" data-tab="modGif" onclick="showTab('modGif')">Modify Gifs</button>
   </div>
-  
-  </div>
+
+
   <div id="ViewAndDownloadGIFForm" style="display: block;">
     <h2>View and Download GIF</h2>
     <input type="text" id="gifIdInput" placeholder="GIF ID">
-    <input type="text" id="downloadFileNameInput" placeholder="Enter file name (in Latin)">
+    <input type="text" id="downloadFileNameInput" name="filename" placeholder="Enter file name (in Latin)">
     <button onclick="openGif()">Open GIF</button>
     <button onclick="downloadGif()">Download GIF</button>
-    
+        
     <video id="" controls class="styled-video" style="display: none;"></video> <!-- <video> для відображення GIF з класом "styled-video" -->
     <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
     <div id="gifAttributes"></div>
@@ -42,37 +55,17 @@
     <button onclick="zoomOut()">Zoom Out</button>
     <button onclick="resetZoom()">Reset Zoom</button>
   </div>
-  
-  <div class="gif-container" id="pigGifContainer" style="display: block;">
+    
+  <!-- Блок для відображення списку гіфок -->
+  <div class="gif-container" id="allGifContainer" style="display: block;">
     <h2>List of GIFs</h2>
     <div class="gif-columns">
-      <ul id="pigGifList"></ul>
+      <ul id="gifList"></ul>
     </div>
   </div>
 
   <script>
-    function displayPigGifList() {
-      const gifList = document.getElementById('pigGifList');
-      const attribute = "pig";
-      fetch(`/gif-list-by-attribute/${attribute}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.length > 0) {
-          data.forEach(gif => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
-            gifList.appendChild(listItem);
-          });
-        } else {
-          gifList.innerHTML = '<li>No "Pig" GIFs available.</li>';
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching "Comaru" GIF list:', error);
-      });
-      }
-
-    displayPigGifList(); // Виклик функції при завантаженні сторінки для відображення відповідного списку гіфок
+    displayGifList();// Виклик функції при завантаженні сторінки для відображення відповідного списку гіфок
   </script>
 </body>
 </html>
