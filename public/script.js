@@ -1,36 +1,24 @@
-let isAuthenticated = false;
+console.log('script.js loaded');
+let csrfToken = '';
+document.addEventListener('DOMContentLoaded', function () {
+    csrfToken = getCsrfToken();
+    function getCsrfToken() {
+        const tokenElement = document.querySelector('meta[name="csrf-token"]');
+        if (tokenElement) {
+            return tokenElement.getAttribute('content');
+        } else {
+            console.error('CSRF token not found');
+            return '';
+        }
+    }
 
-function authenticateAndShowTab(tabName) {
-  const login = prompt('Enter login:');
-  const password = prompt('Enter password:');
-
-  fetch('/check-auth', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ login, password }),
-  })
-    .then(response => {
-      if (response.ok) {
-        isAuthenticated = true;
-        sessionStorage.setItem('isAuthenticated', 'true');
-        showTab('modGif');
-      } else {
-        isAuthenticated = false;
-        alert('Invalid login or password. Please try again.');
-      }
-    })
-    .catch(error => {
-      console.error('Error checking authentication:', error);
-    });
-}
+    
+});
 
 function showTab(tabName) {
   const savedAuthStatus = sessionStorage.getItem('isAuthenticated');
   isAuthenticated = savedAuthStatus === 'true';
 
-  // Перемикання вкладок
   if (tabName === 'main') {
     window.location.href = '/'; 
   } else if (tabName === 'comaruFamily') {
@@ -49,10 +37,10 @@ function showTab(tabName) {
   }
   else if (tabName === 'modGif') {
     if (!isAuthenticated){
-      authenticateAndShowTab('modGif');
+      authenticateAndShowTab();
       return;
     }
-    window.location.href = '/modify-gifs'; 
+    window.location.href = '/modify-gifs';
   }
 }
 
@@ -114,8 +102,8 @@ function openGif() {
       });
   fetch(`/gif-name/${gifId}`) // Отримання назви
       .then(response => response.json())
-      .then(filename => { //TODO: Check in express does it work with data.filename
-        document.getElementById('gifName').textContent = `GIF Name: ${filename}`;
+      .then(data => { 
+        document.getElementById('gifName').textContent = `GIF Name: ${data.filename}`;
     })
       .catch(error => {
         console.error('Error fetching GIF name:', error);
@@ -128,7 +116,7 @@ function showGif(gifId) {
   openGif();
 }
 
-function downloadGif() {
+function downloadGif() {//TODO: fix if name is not found
   const gifIdInput = document.getElementById('gifIdInput');
   const gifId = gifIdInput.value;
   const downloadFileNameInput = document.getElementById('downloadFileNameInput');
@@ -168,8 +156,8 @@ function displayGifList() {
     .then(data => {
       if (data.length > 0) {
         data.forEach(gif => {
-          const listItem = document.createElement('li'); //TODO: Check if work with id instead of _id
-          listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
           gifList.appendChild(listItem);
         });
       } else {
@@ -189,7 +177,7 @@ function displayGifListByAttribute(attribute) {
       if (data.length > 0) {
         data.forEach(gif => {
           const listItem = document.createElement('li');
-          listItem.innerHTML = `<a href="#" onclick="showGif('${gif._id}')">${gif.filename}</a>`;
+          listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
           gifList.appendChild(listItem);
         });
       } else {
