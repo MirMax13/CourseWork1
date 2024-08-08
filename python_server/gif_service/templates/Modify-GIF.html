@@ -132,7 +132,7 @@
           return;
         }
 
-        fetch(`/edit-name/${gifId}`, { // TODO: Why after changing name, it is displayed in new order?
+        fetch(`/edit-name/${gifId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

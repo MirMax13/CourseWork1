@@ -219,7 +219,6 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       }
 
       const allAttributes = [...new Set([defaultAttribute, ...additionalAttributes])];
-      //TODO: Check if all appears if it is not in the list
       if (mimetype !== 'image/gif') {
         fs.unlinkSync(req.file.path);
         return res.status(400).send('Only GIF files are allowed.');
