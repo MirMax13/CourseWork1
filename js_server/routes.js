@@ -105,7 +105,7 @@ router.get('/gif-list', async (req, res) => {
 router.get('/gif-list-by-name/:name', async (req, res) => {
   try {
     const searchTerm = req.params.name;
-    const gifs = await GifModel.find({ filename: { $regex: searchTerm, $options: 'i' } }, 'filename');
+    const gifs = await GifModel.find({ filename: { $regex: searchTerm, $options: 'i' } }, 'filename id');
     res.json(gifs);
   } catch (error) {
     res.status(500).send('Помилка пошуку GIFs за назвою');
@@ -117,7 +117,7 @@ router.get('/gif-list-by-attribute/:attribute', async (req, res) => {
   try {
     const gifs = await GifModel.find({ attributes: attribute }).exec();
     const truncatedGifs = gifs.map(gif => ({
-      _id: gif._id,
+      id: gif.id,
       filename: gif.filename,
     }));
     res.json(truncatedGifs);
@@ -168,7 +168,7 @@ router.put('/edit-attributes/:id', async (req, res) => {
       return res.status(400).send('Invalid attributes format');
     }
 
-    const gif = await GifModel.findById(gifId);
+    const gif = await GifModel.findOne({ id: gifId });;
 
     if (!gif) {
       return res.status(404).send('GIF not found');
@@ -193,7 +193,7 @@ router.delete('/gif/:id', async (req, res) => {
       return res.status(401).send('Authentication required');
     }
     const gifId = req.params.id;
-    const deletedGif = await GifModel.findByOneandDelete({ id: gifId });
+    const deletedGif = await GifModel.findOneAndDelete({ id: gifId });
 
     if (!deletedGif) {
       return res.status(404).send('GIF not found.');
