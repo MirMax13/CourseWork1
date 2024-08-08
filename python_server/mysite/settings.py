@@ -61,6 +61,10 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # 'DIRS': [BASE_DIR.parent / 'views'],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'gif_service', 'templates'),  # Дефолтна папка шаблонів
+            os.path.join(BASE_DIR, '..', 'views'),  # Папка з іншими шаблонами
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
