@@ -13,11 +13,9 @@ function authenticateAndShowTab() { //TODO: fix with sessions
     body: JSON.stringify({ login, password }),
   })
     .then(response => {
-            console.log('Response status:', response.status);
             return response.json();
         })
         .then(data => {
-            console.log('Response data:', data);
             if (data.isAuthenticated) {
                 isAuthenticated = true;
                 sessionStorage.setItem('isAuthenticated', 'true');

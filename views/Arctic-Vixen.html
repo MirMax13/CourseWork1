@@ -7,21 +7,33 @@
   <meta name="csrf-token" content="{{ csrf_token }}">
   <meta name="server-type" content="{{ server_type }}">
   <title>Arctic Vixen GIF List</title>
-  <link rel="stylesheet" type="text/css" href="/public/styles.css">
-  <!--<link rel="shortcut icon"type="image/ico"href="/fav/favicon.ico"/>-->
+  <!-- {% load static %} -->
   <script>
     let serverType = "{{ server_type }}";
+    let stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.type = 'text/css';
+    let scriptJs = document.createElement('script');
     if (serverType === "django") {
-      let script = document.createElement('script');
-      script.src = "/public/script_django.js";
-      document.head.appendChild(script);
+      stylesheet.href = "{% static 'styles.css' %}";
+      let scriptDjango = document.createElement('script');
+      scriptDjango.src = "{% static 'script_django.js' %}";
+      document.head.appendChild(scriptDjango);
+      scriptJs.src = "{% static 'script.js' %}";
     } else {
-      let script = document.createElement('script');
-      script.src = "/public/script_express.js";
-      document.head.appendChild(script);
+      stylesheet.href = "/public/styles.css";
+      let scriptExpress = document.createElement('script');
+      scriptExpress.src = "/public/script_express.js";
+      document.head.appendChild(scriptExpress);
+      scriptJs.src = "/public/script.js";
     }
+    scriptJs.onload = function () {
+      csrfToken = getCsrfToken();
+      displayGifListByAttribute(attribute = 'arctic_vixen');
+    };
+    document.head.appendChild(stylesheet);
+    document.head.appendChild(scriptJs);
   </script>
-  <script src="/public/script.js"></script>
 </head>
 <body>
   <div id="tabs">
@@ -43,8 +55,8 @@
     <button onclick="openGif()">Open GIF</button>
     <button onclick="downloadGif()">Download GIF</button>
     
-    <video id="" controls class="styled-video" style="display: none;"></video> <!-- <video> для відображення GIF з класом "styled-video" -->
-    <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
+    <video id="" controls class="styled-video" style="display: none;"></video>
+    <img id="gifImage" style="display: none;">
     <div id="gifAttributes"></div>
     <div id="gifName"></div>
   </div>
@@ -61,10 +73,6 @@
       <ul id="arctic_vixenGifList"></ul>
     </div>
   </div>
-
-  <script>
-    displayGifListByAttribute('arctic_vixen') // Виклик функції при завантаженні сторінки для відображення відповідного списку гіфок
-  </script>
 </body>
 </html>
 
