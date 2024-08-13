@@ -28,9 +28,9 @@ environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DJANGO_DEBUG', default=False),
+DEBUG = env('DJANGO_DEBUG', default=False)
 
-ALLOWED_HOSTS = ['gif-service-beeedec38482.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [env('DEPLOYMENT_URL'), 'localhost', '127.0.0.1']
 
 
 
@@ -54,7 +54,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'mysite.urls'
 

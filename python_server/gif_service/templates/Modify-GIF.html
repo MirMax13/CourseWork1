@@ -6,21 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token }}">
   <meta name="server-type" content="{{ server_type }}">
+  <!-- {% load static %} -->
   <title>Modify GIFs</title>
-  <link rel="stylesheet" type="text/css" href="/public/styles.css">
-  <script>
-    let serverType = "{{ server_type }}";
-    if (serverType === "django") {
-      let script = document.createElement('script');
-      script.src = "/public/script_django.js";
-      document.head.appendChild(script);
-    } else {
-      let script = document.createElement('script');
-      script.src = "/public/script_express.js";
-      document.head.appendChild(script);
-    }
-  </script>
-  <script src="/public/script.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+  <script src="{% static 'script.js' %}"></script>
+  <script src="{% static 'script_django.js' %}"></script>
 </head>
 <body>
   <div id="tabs">

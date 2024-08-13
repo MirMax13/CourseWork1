@@ -7,20 +7,32 @@
   <meta name="csrf-token" content="{{ csrf_token }}">
   <meta name="server-type" content="{{ server_type }}">
   <title>Search GIF by attribute</title>
-  <link rel="stylesheet" type="text/css" href="/public/styles.css">
+  <!-- {% load static %} -->
   <script>
     let serverType = "{{ server_type }}";
+    let stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.type = 'text/css';
+    let scriptJs = document.createElement('script');
     if (serverType === "django") {
-      let script = document.createElement('script');
-      script.src = "/public/script_django.js";
-      document.head.appendChild(script);
+      stylesheet.href = "{% static 'styles.css' %}";
+      let scriptDjango = document.createElement('script');
+      scriptDjango.src = "{% static 'script_django.js' %}";
+      document.head.appendChild(scriptDjango);
+      scriptJs.src = "{% static 'script.js' %}";
     } else {
-      let script = document.createElement('script');
-      script.src = "/public/script_express.js";
-      document.head.appendChild(script);
+      stylesheet.href = "/public/styles.css";
+      let scriptExpress = document.createElement('script');
+      scriptExpress.src = "/public/script_express.js";
+      document.head.appendChild(scriptExpress);
+      scriptJs.src = "/public/script.js";
     }
+    scriptJs.onload = function () {
+      csrfToken = getCsrfToken();
+    };
+    document.head.appendChild(stylesheet);
+    document.head.appendChild(scriptJs);
   </script>
-  <script src="/public/script.js"></script>
 </head>
 <body>
   <div id="tabs">

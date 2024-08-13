@@ -8,19 +8,8 @@
   <meta name="server-type" content="{{ server_type }}">
   <title>Modify GIF</title>
   <link rel="stylesheet" type="text/css" href="/public/styles.css">
-  <script>
-    let serverType = "{{ server_type }}";
-    if (serverType === "django") {
-      let script = document.createElement('script');
-      script.src = "/public/script_django.js";
-      document.head.appendChild(script);
-    } else {
-      let script = document.createElement('script');
-      script.src = "/public/script_express.js";
-      document.head.appendChild(script);
-    }
-  </script>
   <script src="/public/script.js"></script>
+  <script src="/public/script_express.js"></script>
 </head>
 
 <body>
