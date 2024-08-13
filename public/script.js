@@ -1,7 +1,4 @@
 console.log('script.js loaded');
-let csrfToken = '';
-document.addEventListener('DOMContentLoaded', function () {
-    csrfToken = getCsrfToken();
     function getCsrfToken() {
         const tokenElement = document.querySelector('meta[name="csrf-token"]');
         if (tokenElement) {
@@ -11,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return '';
         }
     }
-});
 
 function showTab(tabName) {
   const savedAuthStatus = sessionStorage.getItem('isAuthenticated');
@@ -84,7 +80,6 @@ function openGif() {
         gifImage.src = gifUrl;
         gifImage.style.display = 'block';
         currentScale = 1;
-        console.log(blob);
       }
     })
     .catch(error => {

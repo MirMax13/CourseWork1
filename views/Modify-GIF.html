@@ -53,8 +53,7 @@
     <button onclick="deleteGif()">Delete GIF</button>
 
     <video id="" controls class="styled-video" style="display: none;"></video>
-    <!-- <video> для відображення GIF з класом "styled-video" -->
-    <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
+    <img id="gifImage" style="display: none;">
     <div id="gifAttributes"></div>
     <div id="gifName"></div>
   </div>
@@ -80,8 +79,6 @@
     </div>
   </div>
 
-
-  <!-- Блок для відображення списку гіфок -->
   <div class="gif-container" id="allGifContainer" style="display: block;">
     <h2>List of GIFs</h2>
     <div class="gif-columns">
@@ -90,9 +87,7 @@
   </div>
 
   <script>
-
-    displayGifList();// Виклик функції при завантаженні сторінки для відображення списку всіх гіфок
-
+    displayGifList();
     function deleteGif() {
       const gifIdInputDel = document.getElementById('gifIdInput');
       const gifId = gifIdInputDel.value;
@@ -107,7 +102,6 @@
       })
         .then(response => {
           if (response.ok) {
-            console.log('GIF deleted successfully.');
             alert('GIF deleted successfully.');
           } else if (response.status === 404) {
             console.error('GIF not found.');
@@ -143,7 +137,6 @@
       })
         .then(response => {
           if (response.ok) {
-            console.log('GIF name updated successfully.');
             alert('GIF name updated successfully.');
           } else {
             console.error('Error updating GIF name:', response.status);
@@ -176,7 +169,6 @@
       })
         .then(response => {
           if (response.ok) {
-            console.log('GIF attributes updated successfully.');
             alert('GIF attributes updated successfully.');
           } else {
             console.error('Error updating GIF attributes:', response.status);

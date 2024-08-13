@@ -42,8 +42,8 @@
     <button onclick="openGif()">Open GIF</button>
     <button onclick="downloadGif()">Download GIF</button>
         
-    <video id="" controls class="styled-video" style="display: none;"></video> <!-- <video> для відображення GIF з класом "styled-video" -->
-    <img id="gifImage" style="display: none;"> <!-- <img> для відображення GIF -->
+    <video id="" controls class="styled-video" style="display: none;"></video>
+    <img id="gifImage" style="display: none;">
     <div id="gifAttributes"></div>
     <div id="gifName"></div>
   </div>
@@ -59,7 +59,6 @@
     <button onclick="resetZoom()">Reset Zoom</button>
   </div>
     
-  <!-- Блок для відображення списку гіфок -->
   <div class="gif-container" id="allGifContainer" style="display: block;">
     <h2>List of GIFs</h2>
     <div class="gif-columns">
@@ -80,7 +79,6 @@
 
           if (data.length > 0) {
             data.forEach(gif => {
-              console.log('GIF ID:', gif.id);
               const listItem = document.createElement('li');
               listItem.innerHTML = `<a href="#" onclick="showGif('${gif.id}')">${gif.filename}</a>`;
               gifList.appendChild(listItem);

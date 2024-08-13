@@ -105,7 +105,6 @@
         })
           .then(response => {
             if (response.ok) {
-              console.log('GIF deleted successfully.');
               alert('GIF deleted successfully.');
             } else if (response.status === 404) {
               console.error('GIF not found.');
@@ -142,7 +141,6 @@
         })
           .then(response => {
             if (response.ok) {
-              console.log('GIF name updated successfully.');
               alert('GIF name updated successfully.');
             } else {
               console.error('Error updating GIF name:', response.status);
@@ -176,7 +174,6 @@
         })
           .then(response => {
             if (response.ok) {
-              console.log('GIF attributes updated successfully.');
               alert('GIF attributes updated successfully.');
             } else {
               console.error('Error updating GIF attributes:', response.status);
