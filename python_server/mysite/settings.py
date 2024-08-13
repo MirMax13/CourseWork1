@@ -30,7 +30,7 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DJANGO_DEBUG', default=False),
 
-ALLOWED_HOSTS = ['gif-service-beeedec38482.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [env('DEPLOYMENT_URL'), 'localhost', '127.0.0.1']
 
 
 
