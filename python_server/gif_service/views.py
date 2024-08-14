@@ -75,15 +75,18 @@ def DownloadGif(request, id):
         return HttpResponse(str(e), status=500)
 
 def GifList(request):
-    gifs = Gif.objects.all()
-    gif_list = []
-    for gif in gifs:
-        gif_list.append({
-            "id": gif.id,
-            "filename": gif.filename,
-            "attributes": gif.attributes
-        })
-    return JsonResponse(gif_list, safe=False)
+    try:
+        gifs = Gif.objects.all()
+        gif_list = []
+        for gif in gifs:
+            gif_list.append({
+                "id": gif.id,
+                "filename": gif.filename,
+                "attributes": gif.attributes
+            })
+        return JsonResponse(gif_list, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 def GifListByAttribute(request, attribute):
     gifs = Gif.objects.filter(attributes__contains=[attribute])
