@@ -145,8 +145,16 @@ function displayGifList() {
   const gifList = document.getElementById('gifList');
 
   fetch('/gif-list')
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then(data => {
+      if (data.error) {
+        throw new Error(data.error);
+      }
       if (data.length > 0) {
         data.forEach(gif => {
           const listItem = document.createElement('li');
@@ -159,6 +167,7 @@ function displayGifList() {
     })
     .catch(error => {
       console.error('Error fetching GIF list:', error);
+      gifList.innerHTML = '<li>Error fetching GIF list.</li>';
     });
 }
 function displayGifListByAttribute(attribute) {
