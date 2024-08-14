@@ -13,8 +13,11 @@ function authenticateAndShowTab() {
             body: JSON.stringify({ login, password }),
         })
         .then(response => {
-            return response.json();
-        })
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
         .then(data => {
             if (data.isAuthenticated) {
                 isAuthenticated = true;
@@ -27,5 +30,6 @@ function authenticateAndShowTab() {
         })
         .catch(error => {
             console.error('Error checking authentication:', error);
+            alert('An error occurred while checking authentication. Please try again later.');
         });
     }
