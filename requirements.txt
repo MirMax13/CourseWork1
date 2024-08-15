@@ -5,3 +5,5 @@ gunicorn
 whitenoise==6.7.0
 dj-database-url
 django-heroku
+django-storages
+boto3
