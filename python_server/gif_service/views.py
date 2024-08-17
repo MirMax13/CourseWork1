@@ -75,15 +75,18 @@ def DownloadGif(request, id):
         return HttpResponse(str(e), status=500)
 
 def GifList(request):
-    gifs = Gif.objects.all()
-    gif_list = []
-    for gif in gifs:
-        gif_list.append({
-            "id": gif.id,
-            "filename": gif.filename,
-            "attributes": gif.attributes
-        })
-    return JsonResponse(gif_list, safe=False)
+    try:
+        gifs = Gif.objects.all()
+        gif_list = []
+        for gif in gifs:
+            gif_list.append({
+                "id": gif.id,
+                "filename": gif.filename,
+                "attributes": gif.attributes
+            })
+        return JsonResponse(gif_list, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 def GifListByAttribute(request, attribute):
     gifs = Gif.objects.filter(attributes__contains=[attribute])
@@ -149,29 +152,35 @@ def EditAttributes(request, id):
             return HttpResponse(str(e), status=500)
     return HttpResponse("Invalid request method", status=405)
 
-@login_required
 def GifData(request, id):
     if request.method == 'GET':
-        try:
-            gif = Gif.objects.get(id=id)
-            return HttpResponse(gif.data, content_type=gif.contentType)
-        except Gif.DoesNotExist:
-            return HttpResponse("Gif not found", status=404)
-        except Exception as e:
-            return HttpResponse(str(e), status=500)
+        return handle_get_request(request, id)
     elif request.method == 'DELETE':
-        try:
-            gif = Gif.objects.get(id=id)
-            gif.delete()
-            if not Gif.objects.filter(id=id).exists():
-                return HttpResponse("Gif deleted successfully")
-            else:
-                return HttpResponse("Failed to delete Gif", status=500)
-        except Gif.DoesNotExist:
-            return HttpResponse("Gif not found", status=404)
-        except Exception as e:
-            return HttpResponse(str(e), status=500)
+        return handle_delete_request(request, id)
     return HttpResponse("Invalid request method", status=405)
+
+def handle_get_request(request, id):
+    try:
+        gif = Gif.objects.get(id=id)
+        return HttpResponse(gif.data, content_type=gif.contentType)
+    except Gif.DoesNotExist:
+        return HttpResponse("Gif not found", status=404)
+    except Exception as e:
+        return HttpResponse(str(e), status=500)
+
+@login_required
+def handle_delete_request(request, id):
+    try:
+        gif = Gif.objects.get(id=id)
+        gif.delete()
+        if not Gif.objects.filter(id=id).exists():
+            return HttpResponse("Gif deleted successfully")
+        else:
+            return HttpResponse("Failed to delete Gif", status=500)
+    except Gif.DoesNotExist:
+        return HttpResponse("Gif not found", status=404)
+    except Exception as e:
+        return HttpResponse(str(e), status=500)
 
 @login_required  
 def UploadGif(request):
