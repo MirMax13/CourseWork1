@@ -1,0 +1,150 @@
+  /* Стилі для body */
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Стилі для заголовків h2 */
+    h2 {
+      color: #333;
+    }
+
+    /* Стилі для посилань для завантаження GIF */
+    a {
+      color: #0074d9;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    /* Стилі для форм */
+    form {
+      margin-bottom: 20px;
+    }
+
+    /* Стилі для кнопок */
+    button {
+      cursor: pointer;
+      background-color: #0074d9;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #0289ff;
+    }
+
+    /* Стилі для текстових полів */
+    input[type="text"] {
+      width: 200px;
+      padding: 10px;
+      margin: 8px 0;
+      margin-right: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    /* Стилі для відео та зображень */
+    video, img {
+      max-width: 100%;
+      height: auto;
+      display: none;
+    }
+
+    /* Стилі для елемента з contentType */
+    #contentType {
+      margin-top: 20px;
+      color: #555;
+    }
+
+    /* Стилі для елемента з GIF ID */
+    #gifIdElement {
+      margin-top: 10px;
+      color: #888;
+    }
+
+    /* Стилі для посилання для завантаження GIF як тексту */
+    #downloadTextLink {
+      display: none;
+      color: #0074d9;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    /* Стилі для кнопок Zoom*/
+    #zoomControls {
+      margin-top: 10px;
+    }
+
+    /* Стилі для відображення GIF*/
+    #gifImage {
+      transition: transform 0.5s; /* Плавна анімація зміни масштабу */
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Стилі для відображення атрибутів GIF*/
+    #gifAttributes {
+      margin-top: 10px;
+    }
+    
+    /* Стилі для відображення назви GIF*/
+    #gifName {
+      margin-top: 10px;
+    }
+
+    /* Стилі для контейнера гіфок */
+    .gif-container {
+      margin: 20px; /* Відступ в пікселях */
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    /* Стилі для стовпців з гіфками */
+    .gif-columns {
+      column-count: 4; /* Кількість стовпців */
+      column-gap: 20px; /* Зазор між стовпцями */
+    }
+    .gif-columns ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .gif-columns li {
+      margin-bottom: 10px; /* Зазор між елементами у стовпці */
+    }
+
+    /* Стилі для вкладок */
+    #tabs {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .active-tab {
+      background-color: #007BFF; 
+      color: #fff; 
+      transition: background-color 0.3s, color 0.3s; /* Анімація зміни кольору фону та тексту з тривалістю 0.3 секунди */
+    }
+    .tab-button {
+      padding: 12px 26px;
+      font-size: 14px;
+      margin-left: 10px; /* Відступ між вкладками */
+    }
+    .tab-button[data-tab="searchByName"] {
+      margin-left: auto;
+    }
+    .tab-button[data-tab="searchByAttributes"] {
+      margin-left: 10px;
+    }
+    
+    
