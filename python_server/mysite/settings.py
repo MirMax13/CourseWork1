@@ -30,7 +30,7 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DJANGO_DEBUG', default=False)
 
-ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.herokuapp.com',".vercel.app", ".now.sh", 'localhost', '127.0.0.1']
 
 
 
@@ -55,7 +55,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 
@@ -151,9 +150,16 @@ USE_TZ = True
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles/'
+STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
+# STATICFILES_DIRS = [
+#     BASE_DIR.parent / 'public',
+# ]
 STATICFILES_DIRS = [
-    BASE_DIR.parent / 'public',
+    BASE_DIR/ 'static',
 ]
+MEDIA_ROOT = BASE_DIR / 'static/media'
 
 # S3 BUCKET SETTINGS
 # STORAGES = {

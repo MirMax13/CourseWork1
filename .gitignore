@@ -3,3 +3,4 @@ node_modules/
 __pycache__
 python_server/venv/
 uploads/
+.vercel
