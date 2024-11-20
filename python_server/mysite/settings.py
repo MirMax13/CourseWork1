@@ -150,8 +150,9 @@ USE_TZ = True
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-STATIC_ROOT = BASE_DIR / 'staticfiles/'
-STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = BASE_DIR / 'staticfiles/'
+STATIC_URL = '/static/'
 MEDIA_URL = 'media/'
 # STATICFILES_DIRS = [
 #     BASE_DIR.parent / 'public',
