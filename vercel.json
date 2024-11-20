@@ -4,7 +4,7 @@
     {
       "src": "python_server/mysite/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.10", "buildCommand":"bash setup.sh" }
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.10", "buildCommand":"bash python_server/setup.sh" }
     }
   ],
   "routes": [
