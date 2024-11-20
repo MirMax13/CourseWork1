@@ -2,15 +2,15 @@
   "version": 2,
   "builds": [
     {
-      "src": "python_server/mysite/wsgi.py",
+      "src": "mysite/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.10", "buildCommand":"bash python_server/setup.sh" }
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.10", "buildCommand":"bash setup.sh" }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "python_server/mysite/wsgi.py"
+      "dest": "mysite/wsgi.py"
     },
         {
       "src": "/static/(.*)",
